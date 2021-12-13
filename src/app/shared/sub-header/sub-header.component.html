@@ -1,0 +1,89 @@
+<header *ngIf="userName" class="sticky shadow-sm top-16 bg-gray-50">
+  <div
+    class="flex items-center justify-between max-w-4xl mx-auto text-gray-600"
+  >
+    <!-- - My Adverts (DEFAULT: My Adverts Page) -->
+    <h4
+      routerLink="/adverts"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      My Adverts
+    </h4>
+
+    <!-- - My Profile (Seller Profile Page) -->
+    <h4
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      My Profile
+    </h4>
+
+    <!-- - Buy a House (Homes for Sale List Page) -->
+    <h4
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      Buy a House
+    </h4>
+
+    <!-- - Sell a house (Create/Edit Advert Page) -->
+    <h4
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      Buy a House
+    </h4>
+
+    <!-- - Manage my Account (Manage My Account Page) -->
+    <h4
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      Manage my Account
+    </h4>
+
+    <!-- - My Seller Profile (Seller Profile Page) -->
+    <h4
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      My Seller Profile
+    </h4>
+
+    <!-- - Favourite Houses (Favourites Page) -->
+    <h4
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      Favourite Houses
+    </h4>
+
+    <!-- ***** ONLY FOR ADMIN ***** -->
+    <!-- - User Management (User Management Page) -->
+    <h4
+      *ngIf="userId === 1"
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      User Management
+    </h4>
+
+    <!-- - Advert Management (Advert Management Page) -->
+    <h4
+      *ngIf="userId === 1"
+      routerLink="#"
+      [routerLinkActive]="['active']"
+      class="p-3 text-sm font-normal text-center rounded-t-lg cursor-pointer"
+    >
+      Advert Management
+    </h4>
+  </div>
+</header>

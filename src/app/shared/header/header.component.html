@@ -1,0 +1,65 @@
+<ng-progress id="progressBar"></ng-progress>
+<header class="main-header">
+  <div class="items-center">
+    <h2 routerLink="/home" class="p-4 font-medium text-center cursor-pointer">
+      LISTINGS.IO
+    </h2>
+  </div>
+
+  <div class="flex items-center justify-end">
+    <h5
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLink="/home"
+      class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
+    >
+      Home
+    </h5>
+
+    <!-- - Homes for Sale (Homes for Sale List Page) -->
+    <h4
+      class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
+      [routerLinkActive]="['active']"
+    >
+      Homes for Sale
+    </h4>
+
+    <!-- - Sell a house (Redirects to Register page, you have to be registered to list a property) -->
+    <h4
+      class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
+      [routerLinkActive]="['active']"
+    >
+      Sell a house
+    </h4>
+
+    <!-- - Login (if not authenticated – will redirect to Login Page) -->
+    <h4
+      *ngIf="!userName"
+      routerLink="/register"
+      [routerLinkActive]="['active']"
+      class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
+    >
+      Register
+    </h4>
+
+    <!-- - Register (if not authenticated – will redirect to Register Page) -->
+    <h4
+      *ngIf="!userName"
+      routerLink="/login"
+      [routerLinkActive]="['active']"
+      class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
+    >
+      Login
+    </h4>
+
+    <!-- - Logout (if authenticated – will log the user out and return to Home Page) -->
+    <h4
+      (click)="logoutUser()"
+      *ngIf="userName"
+      class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
+      [routerLinkActive]="['active']"
+    >
+      Logout
+    </h4>
+  </div>
+</header>

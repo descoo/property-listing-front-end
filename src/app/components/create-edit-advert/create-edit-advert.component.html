@@ -1,0 +1,145 @@
+<div class="container">
+  <div class="flex justify-center">
+    <!-- Success Alert -->
+    <div
+      class="w-50 alert alert-success fade show"
+      *ngIf="progressBarService.showSuccess"
+    >
+      <strong>Success!</strong> Logged in successfully
+    </div>
+
+    <!-- Error Alert -->
+    <div
+      *ngIf="progressBarService.showError"
+      class="alert alert-danger fade show"
+    >
+      <strong>Error!</strong> Could not log you in, try to login again.
+    </div>
+  </div>
+
+  <div class="justify-center pt-2 mt-10 row">
+    <div class="pb-3 rounded-md shadow col-sm-6">
+      <h1 class="pt-3 font-semibold text-center text-secondary">ADD ADVERT</h1>
+      <form
+        class="px-5"
+        (ngSubmit)="submitAdvert()"
+        [formGroup]="advertForm"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="name" class="text-blue-500 col-form-label"
+            >Advert Headline</label
+          >
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.name
+            }"
+            id="name"
+            type="text"
+            placeholder="*required"
+            formControlName="name"
+            (blur)="logValidationErrors()"
+          />
+          <span class="invalid-feedback">
+            {{ formErrors.name }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="province" class="text-blue-500 col-form-label"
+            >Province</label
+          >
+          <select
+            class="text-gray-600 rounded-md form-control h-9"
+            id="province"
+            formControlName="province"
+            [ngClass]="{
+              'is-invalid': formErrors.province
+            }"
+            (blur)="logValidationErrors()"
+          >
+            <option value="">-- Select a province --</option>
+            <option
+              *ngFor="let province of provincesToSelectFrom"
+              [value]="province"
+            >
+              {{ province }}
+            </option>
+          </select>
+          <span class="invalid-feedback"> {{ formErrors.province }} </span>
+        </div>
+
+        <div class="form-group">
+          <label for="city" class="text-blue-500 col-form-label">City</label>
+          <select
+            [disabled]="!advertForm.controls.province.value"
+            class="text-gray-600 rounded-md form-control h-9"
+            id="city"
+            formControlName="city"
+            [ngClass]="{
+              'is-invalid': formErrors.city
+            }"
+            (blur)="logValidationErrors()"
+          >
+            <option value="">-- Select a city --</option>
+            <option *ngFor="let city of citiesToSelectFrom" [value]="city">
+              {{ city }}
+            </option>
+          </select>
+          <span class="invalid-feedback"> {{ formErrors.city }} </span>
+          <span class="text-sm text-gray-600">
+            Select a province first before selecting a city</span
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="advertDetails" class="text-blue-500 col-form-label"
+            >Advert Details</label
+          >
+          <textarea
+            class="text-gray-600 rounded-md form-control"
+            [ngClass]="{
+              'is-invalid': formErrors.advertDetails
+            }"
+            id="advertDetails"
+            rows="3"
+            placeholder="*required"
+            formControlName="advertDetails"
+            (blur)="logValidationErrors()"
+          >
+          </textarea>
+          <span class="invalid-feedback">
+            {{ formErrors.advertDetails }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="price" class="text-blue-500 col-form-label">Price</label>
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.price
+            }"
+            id="price"
+            type="number"
+            placeholder="*required"
+            formControlName="price"
+            (blur)="logValidationErrors()"
+          />
+          <span class="invalid-feedback">
+            {{ formErrors.price }}
+          </span>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="advertForm.invalid"
+          class="mt-4 btn btn-primary"
+        >
+          submit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+.main-header {
+  @apply sticky top-0 z-10 flex justify-between px-5 bg-white shadow-md;
+}
+.active {
+  @apply bg-gray-100 rounded-sm;
+}
