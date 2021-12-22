@@ -13,8 +13,8 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
   private url: string = 'api/users';
-  private setUser = new BehaviorSubject<any>({});
-  setUser$ = this.setUser.asObservable();
+  private currentUser = new BehaviorSubject<any>({});
+  currentUser$ = this.currentUser.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -37,19 +37,19 @@ export class AuthService {
   logout(): void {
     setTimeout(() => {
       localStorage.removeItem('currentUser');
-      this.setUser.next('');
+      this.currentUser.next('');
     }, 2000);
   }
 
   autoLogin(): void {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!currentUser) return;
-    this.setUser.next(currentUser);
+    this.currentUser.next(currentUser);
   }
 
-  changeCurrentUser(user: any) {
+  changeCurrentUser(user: User | undefined) {
     if (user) {
-      this.setUser.next(user);
+      this.currentUser.next(user);
       localStorage.setItem('currentUser', JSON.stringify(user));
     }
   }

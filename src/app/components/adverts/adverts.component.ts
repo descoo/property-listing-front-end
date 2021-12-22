@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { delay, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { Ad } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
 
@@ -10,12 +11,31 @@ import { AdvertsService } from 'src/app/services/adverts.service';
 })
 export class AdvertsComponent implements OnInit {
   adverts!: Ad[] | undefined;
-  constructor(private advertsService: AdvertsService) {}
+  author!: string;
+  constructor(private router: Router, private advertsService: AdvertsService) {}
 
   ngOnInit(): void {
     this.advertsService.getUser().subscribe((user) => {
-      this.adverts = user.adverts;
-      console.log(this.adverts);
+      this.author = user.name;
     });
+
+    this.advertsService
+      .getAdverts()
+      .pipe(
+        map((ad) => {
+          return ad?.filter((ad) => ad.author === this.author);
+          // .filter((ad) => ad.hiddenStatus === false);
+        })
+      )
+      .subscribe((ads) => (this.adverts = ads));
+  }
+
+  hideAdvert(ad: Ad): void {
+    // this.advertsService
+    //   .toggleHide(ad)
+    //   .subscribe((newAd: Ad) => (ad.hiddenStatus = newAd.hiddenStatus));
+  }
+  deleteAdvert(id: number | null): void {
+    console.log('delete', id);
   }
 }

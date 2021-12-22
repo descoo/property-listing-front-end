@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit {
     public progressBarService: ProgressbarService,
     private auth: AuthService
   ) {
-    this.auth.setUser$.subscribe((user) => {
+    this.auth.currentUser$.subscribe((user) => {
       if (user.name) {
         this.userName = user.name;
       } else {

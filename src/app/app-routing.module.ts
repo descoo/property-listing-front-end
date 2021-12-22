@@ -5,11 +5,17 @@ import { CreateEditAdvertComponent } from './components/create-edit-advert/creat
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { MyAdvertsGuard } from './guards/my-adverts.guard';
 
 const routes: Routes = [
   { path: 'salary-list', component: HomeComponent },
-  { path: 'add-edit', component: CreateEditAdvertComponent },
-  { path: 'adverts', component: AdvertsComponent },
+  { path: 'add', component: CreateEditAdvertComponent },
+  { path: 'edit/:id', component: CreateEditAdvertComponent },
+  {
+    path: 'adverts',
+    component: AdvertsComponent,
+    canActivate: [MyAdvertsGuard],
+  },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },

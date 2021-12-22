@@ -11,8 +11,8 @@ export class SubHeaderComponent implements OnInit {
   userName!: string;
   userId!: number | null;
   constructor(private auth: AuthService) {
-    this.auth.setUser$.pipe(delay(4000)).subscribe((user) => {
-      if (user.name) {
+    this.auth.currentUser$.pipe(delay(4000)).subscribe((user) => {
+      if (user) {
         this.userName = user.name;
         this.userId = user.id;
       } else {

@@ -7,6 +7,8 @@ import { ProgressbarService } from 'src/app/services/progressbar.service';
 import { createEditMessages } from 'src/app/helpers/validationmsgs';
 import { cities, provinces } from 'src/app/helpers/locations-data';
 import { debounceTime } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { AdvertsService } from 'src/app/services/adverts.service';
 
 @Component({
   selector: 'app-create-edit-advert',
@@ -16,19 +18,12 @@ import { debounceTime } from 'rxjs/operators';
 export class CreateEditAdvertComponent implements OnInit {
   advertForm!: FormGroup;
   errorMessage!: string;
+  advertId!: number;
+  province!: string;
+  sub!: Subscription;
 
   provincesToSelectFrom = provinces;
   citiesToSelectFrom!: string[];
-
-  advert: Ad = {
-    imgUrl: '',
-    hiddenStatus: false,
-    name: '',
-    province: '',
-    city: '',
-    advertDetails: '',
-    price: 0,
-  };
 
   validationMessages: any = createEditMessages;
   formErrors: any = {
@@ -43,32 +38,66 @@ export class CreateEditAdvertComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    public progressBarService: ProgressbarService
+    public progressBarService: ProgressbarService,
+    private advertsService: AdvertsService
   ) {}
 
   ngOnInit(): void {
+    this.routeWatcher();
     this.createForm();
+    this.disableUneditableFields();
     this.formWatcher();
     this.provinceSelectionWatcher();
   }
 
   // get object
+  routeWatcher(): void {
+    this.route.paramMap.subscribe((params) => {
+      const id = Number(params.get('id'));
+      if (!id) return;
+      this.getAdvertData(id);
+      this.advertId = id;
+    });
+  }
+  getAdvertData(id: number): void {
+    this.progressBarService.startLoading();
+    this.sub = this.advertsService.getSingleAdvert(id).subscribe(
+      (ad: Ad) => {
+        this.advertForm.patchValue({
+          id: ad.id,
+          author: ad.author,
+          imgUrl: ad.imgUrl,
+          hiddenStatus: ad.hiddenStatus,
+          name: ad.name,
+          province: ad.province,
+          city: ad.city,
+          advertDetails: ad.advertDetails,
+          price: ad.price,
+        });
+        this.success();
+      },
+      (error) => {
+        this.error();
+        setTimeout(() => this.router.navigate(['/adverts']), 4000);
+      }
+    );
+  }
 
   // create form
   createForm(): void {
     this.advertForm = this.fb.group({
       name: [
-        this.advert.name,
+        '',
         [
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(100),
         ],
       ],
-      province: [this.advert.province, Validators.required],
-      city: [this.advert.city, Validators.required],
+      province: ['', Validators.required],
+      city: ['', Validators.required],
       advertDetails: [
-        this.advert.advertDetails,
+        '',
         [
           Validators.required,
           Validators.minLength(10),
@@ -76,10 +105,17 @@ export class CreateEditAdvertComponent implements OnInit {
         ],
       ],
       price: [
-        this.advert.price,
+        '',
         [Validators.required, Validators.min(10000), Validators.max(100000000)],
       ],
     });
+  }
+
+  disableUneditableFields(): void {
+    if (this.advertId) {
+      this.advertForm.get('province')?.disable();
+      this.advertForm.get('city')?.disable();
+    }
   }
 
   // user actions
@@ -92,11 +128,10 @@ export class CreateEditAdvertComponent implements OnInit {
   }
 
   provinceSelectionWatcher(): void {
-    this.advertForm
-      .get('province')
-      ?.valueChanges.subscribe((province) =>
-        this.citiesBasedOnProvinceSelection(province)
-      );
+    this.advertForm.get('province')?.valueChanges.subscribe((province) => {
+      this.province = province;
+      this.citiesBasedOnProvinceSelection(province);
+    });
   }
 
   formWatcher(): void {
@@ -108,25 +143,24 @@ export class CreateEditAdvertComponent implements OnInit {
   // create object from form
 
   // submit to backend
-  submitAdvert(): void {}
+  submitAdvert(): void {
+    if (this.advertId) {
+      console.log('edit', this.advertForm.value);
+      return;
+    }
+    console.log('add', this.advertForm.value);
+  }
 
   // UI functions
   success(): void {
     this.progressBarService.setSuccess();
     this.progressBarService.completeLoading();
-    this.progressBarService.setShowSuccess();
-    // setTimeout(() => {
-    //   this.progressBarService.setShowDefaults();
-    //   this.router.navigate(['/home']);
-    // }, 4000);
   }
 
-  error(message: string): void {
+  error(): void {
     this.progressBarService.setError();
     this.progressBarService.setShowError();
     this.progressBarService.completeLoading();
-    // setTimeout(() => this.progressBarService.setShowDefaults(), 4000);
-    // console.log(message);
   }
 
   logValidationErrors(group: FormGroup = this.advertForm): void {

@@ -1,8 +1,8 @@
 <div class="py-10">
   <div class="flex justify-end px-5 pb-5">
     <button
-      routerLink="/add-edit"
-      class="px-2 py-1 text-white bg-green-300 rounded-lg"
+      routerLink="/add"
+      class="px-2 py-1 text-white bg-green-400 rounded-lg"
     >
       Add New Advert
     </button>
@@ -26,10 +26,38 @@
           {{ ad.city }}
         </h5>
       </div>
-      <h3 class="text-green-400">R{{ ad.price }}</h3>
-      <button class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg">
-        Actions...
-      </button>
+      <h3 class="text-red-600">R{{ ad.price }}</h3>
+      <div class="btns">
+        <button class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg">
+          Actions...
+        </button>
+        <button
+          [routerLink]="['/edit', ad.id]"
+          class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg"
+        >
+          edit
+        </button>
+        <button
+          (click)="hideAdvert(ad)"
+          *ngIf="ad.hiddenStatus === false"
+          class="px-2 py-1 text-gray-600 bg-yellow-200 rounded-lg"
+        >
+          hide
+        </button>
+        <button
+          (click)="hideAdvert(ad)"
+          *ngIf="ad.hiddenStatus === true"
+          class="px-2 py-1 text-gray-600 bg-green-200 rounded-lg"
+        >
+          show
+        </button>
+        <button
+          (click)="deleteAdvert(ad.id)"
+          class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg"
+        >
+          delete
+        </button>
+      </div>
     </div>
   </div>
 </div>

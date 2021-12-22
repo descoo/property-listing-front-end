@@ -1,25 +1,17 @@
 <div class="container">
   <div class="flex justify-center">
-    <!-- Success Alert -->
-    <div
-      class="w-50 alert alert-success fade show"
-      *ngIf="progressBarService.showSuccess"
-    >
-      <strong>Success!</strong> Logged in successfully
-    </div>
-
     <!-- Error Alert -->
     <div
       *ngIf="progressBarService.showError"
       class="alert alert-danger fade show"
     >
-      <strong>Error!</strong> Could not log you in, try to login again.
+      <strong>Error!</strong> Could not retrieve edit data, try to edit again.
     </div>
   </div>
 
   <div class="justify-center pt-2 mt-10 row">
     <div class="pb-3 rounded-md shadow col-sm-6">
-      <h1 class="pt-3 font-semibold text-center text-secondary">ADD ADVERT</h1>
+      <h1 class="pt-3 font-bold text-center text-gray-700">ADD ADVERT</h1>
       <form
         class="px-5"
         (ngSubmit)="submitAdvert()"
@@ -27,7 +19,7 @@
         novalidate
       >
         <div class="form-group">
-          <label for="name" class="text-blue-500 col-form-label"
+          <label for="name" class="font-medium text-gray-500 col-form-label"
             >Advert Headline</label
           >
           <input
@@ -47,7 +39,7 @@
         </div>
 
         <div class="form-group">
-          <label for="province" class="text-blue-500 col-form-label"
+          <label for="province" class="font-medium text-gray-500 col-form-label"
             >Province</label
           >
           <select
@@ -71,9 +63,10 @@
         </div>
 
         <div class="form-group">
-          <label for="city" class="text-blue-500 col-form-label">City</label>
+          <label for="city" class="font-medium text-gray-500 col-form-label"
+            >City</label
+          >
           <select
-            [disabled]="!advertForm.controls.province.value"
             class="text-gray-600 rounded-md form-control h-9"
             id="city"
             formControlName="city"
@@ -94,7 +87,9 @@
         </div>
 
         <div class="form-group">
-          <label for="advertDetails" class="text-blue-500 col-form-label"
+          <label
+            for="advertDetails"
+            class="font-medium text-gray-500 col-form-label"
             >Advert Details</label
           >
           <textarea
@@ -115,7 +110,9 @@
         </div>
 
         <div class="form-group">
-          <label for="price" class="text-blue-500 col-form-label">Price</label>
+          <label for="price" class="font-medium text-gray-500 col-form-label"
+            >Price</label
+          >
           <input
             class="text-gray-600 rounded-md form-control h-9"
             [ngClass]="{
