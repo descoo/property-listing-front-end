@@ -5,6 +5,7 @@ import { CreateEditAdvertComponent } from './components/create-edit-advert/creat
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { AuthGuard } from './gaurds/auth.guard';
 import { MyAdvertsGuard } from './guards/my-adverts.guard';
 
 const routes: Routes = [
@@ -16,8 +17,12 @@ const routes: Routes = [
     component: AdvertsComponent,
     canActivate: [MyAdvertsGuard],
   },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },

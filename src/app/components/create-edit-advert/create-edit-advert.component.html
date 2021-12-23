@@ -11,7 +11,9 @@
 
   <div class="justify-center pt-2 mt-10 row">
     <div class="pb-3 rounded-md shadow col-sm-6">
-      <h1 class="pt-3 font-bold text-center text-gray-700">ADD ADVERT</h1>
+      <h1 class="pt-3 font-bold text-center text-gray-700">
+        {{ advertId ? "EDIT ADVERT" : "ADD ADVERT" }}
+      </h1>
       <form
         class="px-5"
         (ngSubmit)="submitAdvert()"
@@ -81,7 +83,7 @@
             </option>
           </select>
           <span class="invalid-feedback"> {{ formErrors.city }} </span>
-          <span class="text-sm text-gray-600">
+          <span *ngIf="!advertId" class="text-sm text-gray-600">
             Select a province first before selecting a city</span
           >
         </div>

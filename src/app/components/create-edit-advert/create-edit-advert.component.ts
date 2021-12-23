@@ -21,6 +21,7 @@ export class CreateEditAdvertComponent implements OnInit {
   advertId!: number;
   province!: string;
   sub!: Subscription;
+  advert!: Ad;
 
   provincesToSelectFrom = provinces;
   citiesToSelectFrom!: string[];
@@ -63,6 +64,7 @@ export class CreateEditAdvertComponent implements OnInit {
     this.progressBarService.startLoading();
     this.sub = this.advertsService.getSingleAdvert(id).subscribe(
       (ad: Ad) => {
+        this.advert = ad;
         this.advertForm.patchValue({
           id: ad.id,
           author: ad.author,
@@ -140,15 +142,29 @@ export class CreateEditAdvertComponent implements OnInit {
     });
   }
 
-  // create object from form
-
   // submit to backend
   submitAdvert(): void {
     if (this.advertId) {
-      console.log('edit', this.advertForm.value);
+      // create object from form
+      const editedAd = { ...this.advert, ...this.advertForm.value };
+      this.progressBarService.startLoading();
+      this.advertsService.updateAdvert(editedAd).subscribe(
+        () => {
+          this.success();
+          this.router.navigate(['/adverts']);
+        },
+        (error: any) => this.error()
+      );
       return;
     }
-    console.log('add', this.advertForm.value);
+    this.progressBarService.startLoading();
+    this.advertsService.addAdvert(this.advertForm.value).subscribe(
+      (ad) => {
+        this.success();
+        this.router.navigate(['/adverts']);
+      },
+      (error: any) => this.error()
+    );
   }
 
   // UI functions

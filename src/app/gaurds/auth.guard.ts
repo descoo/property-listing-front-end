@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class MyAdvertsGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(
@@ -23,8 +23,12 @@ export class MyAdvertsGuard implements CanActivate {
     | boolean
     | UrlTree {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    if (Object.keys(currentUser).length !== 0) return true;
-    this.router.navigate(['/login']);
-    return false;
+    console.log(currentUser);
+    if (Object.keys(currentUser).length === 0) {
+      return true;
+    } else {
+      this.router.navigate(['/adverts']);
+      return false;
+    }
   }
 }

@@ -5,8 +5,12 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, delay } from 'rxjs/operators';
+import { catchError, delay, map } from 'rxjs/operators';
 import { Ad, User } from '../models/user.model';
+
+const headers = new HttpHeaders({
+  'Content-Type': 'application/json',
+});
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +19,10 @@ export class AdvertsService {
   private currentUser!: User;
   private advertUrl = 'api/adverts';
 
+  getUserName(): string {
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    return user.name;
+  }
   constructor(private http: HttpClient) {}
   getUser(): Observable<User> {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -34,26 +42,28 @@ export class AdvertsService {
   }
 
   addAdvert(advert: Ad): Observable<Ad> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-
+    const name = this.getUserName();
+    advert.author = name;
+    advert.hiddenStatus = false;
     return this.http
-      .post<Ad>(this.advertUrl, advert, { headers: headers })
+      .post<Ad>(this.advertUrl, advert, { headers })
       .pipe(delay(2000), catchError(this.handleError));
   }
 
-  // toggleHide(ad: Ad): Observable<Ad> {
-  //   const newStatus = (ad.hiddenStatus = !ad.hiddenStatus);
-  //   ad.hiddenStatus = newStatus;
-  //   const headers = new HttpHeaders({
-  //     'Content-Type': 'application/json',
-  //   });
+  updateAdvert(ad: Ad): Observable<Ad> {
+    return this.http
+      .put<Ad>(`${this.advertUrl}/${ad.id}`, ad, { headers })
+      .pipe(delay(2000), catchError(this.handleError));
+  }
 
-  //   return this.http
-  //     .put<Ad>(`${this.advertUrl}/${ad.id}`, ad, { headers: headers })
-  //     .pipe(delay(2000), catchError(this.handleError));
-  // }
+  toggleHide(ad: Ad): Observable<Ad> {
+    const url = `${this.advertUrl}/${ad.id}`;
+    return this.http.put<Ad>(url, ad, { headers }).pipe(
+      map(() => ad),
+      delay(2000),
+      catchError(this.handleError)
+    );
+  }
 
   deleteAdvert(id: number): Observable<Ad> {
     const headers = new HttpHeaders({

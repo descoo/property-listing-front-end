@@ -38,14 +38,14 @@
           edit
         </button>
         <button
-          (click)="hideAdvert(ad)"
+          (click)="togglehideAdvert(ad)"
           *ngIf="ad.hiddenStatus === false"
           class="px-2 py-1 text-gray-600 bg-yellow-200 rounded-lg"
         >
           hide
         </button>
         <button
-          (click)="hideAdvert(ad)"
+          (click)="togglehideAdvert(ad)"
           *ngIf="ad.hiddenStatus === true"
           class="px-2 py-1 text-gray-600 bg-green-200 rounded-lg"
         >
