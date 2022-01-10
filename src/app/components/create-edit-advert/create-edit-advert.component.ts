@@ -9,6 +9,7 @@ import { cities, provinces } from 'src/app/helpers/locations-data';
 import { debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AdvertsService } from 'src/app/services/adverts.service';
+import { displayMessage } from 'src/app/helpers/helperFuncs';
 
 @Component({
   selector: 'app-create-edit-advert',
@@ -78,9 +79,8 @@ export class CreateEditAdvertComponent implements OnInit {
         });
         this.success();
       },
-      (error) => {
+      () => {
         this.error();
-        setTimeout(() => this.router.navigate(['/adverts']), 4000);
       }
     );
   }
@@ -121,6 +121,10 @@ export class CreateEditAdvertComponent implements OnInit {
   }
 
   // user actions
+  cancelUpdate(): void {
+    this.router.navigate(['/adverts']);
+  }
+
   citiesBasedOnProvinceSelection(province: string): void {
     for (const key of cities) {
       if (key.province == province) {
@@ -153,17 +157,17 @@ export class CreateEditAdvertComponent implements OnInit {
           this.success();
           this.router.navigate(['/adverts']);
         },
-        (error: any) => this.error()
+        () => this.error()
       );
       return;
     }
     this.progressBarService.startLoading();
     this.advertsService.addAdvert(this.advertForm.value).subscribe(
-      (ad) => {
+      () => {
         this.success();
         this.router.navigate(['/adverts']);
       },
-      (error: any) => this.error()
+      () => this.error()
     );
   }
 
@@ -175,8 +179,12 @@ export class CreateEditAdvertComponent implements OnInit {
 
   error(): void {
     this.progressBarService.setError();
-    this.progressBarService.setShowError();
     this.progressBarService.completeLoading();
+    displayMessage(
+      'error',
+      'Oops something went wrong! Redirecting to Adverts'
+    );
+    this.router.navigate(['/adverts']);
   }
 
   logValidationErrors(group: FormGroup = this.advertForm): void {

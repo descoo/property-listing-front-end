@@ -1,14 +1,4 @@
 <div class="container">
-  <div class="flex justify-center">
-    <!-- Error Alert -->
-    <div
-      *ngIf="progressBarService.showError"
-      class="alert alert-danger fade show"
-    >
-      <strong>Error!</strong> Could not retrieve edit data, try to edit again.
-    </div>
-  </div>
-
   <div class="justify-center pt-2 mt-10 row">
     <div class="pb-3 rounded-md shadow col-sm-6">
       <h1 class="pt-3 font-bold text-center text-gray-700">
@@ -131,13 +121,18 @@
           </span>
         </div>
 
-        <button
-          type="submit"
-          [disabled]="advertForm.invalid"
-          class="mt-4 btn btn-primary"
-        >
-          submit
-        </button>
+        <div class="mt-4 flex justify-between">
+          <button (click)="cancelUpdate()" class="btn btn-danger">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="advertForm.invalid"
+            class="btn btn-primary"
+          >
+            Publish Advert
+          </button>
+        </div>
       </form>
     </div>
   </div>

@@ -1,0 +1,60 @@
+<div class="container pt-5">
+  <div class="justify-center pt-2 mt-20 row">
+    <div class="pb-3 rounded-md shadow col-sm-4">
+      <h1 class="pt-3 font-semibold text-center text-secondary">
+        UPDATE MY PROFILE
+      </h1>
+      <form
+        class="px-5"
+        (ngSubmit)="updateProfile()"
+        [formGroup]="profileForm"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="email" class="col-form-label">Email</label>
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.email
+            }"
+            id="email"
+            type="email"
+            placeholder="*required"
+            formControlName="email"
+          />
+          <span class="invalid-feedback">
+            {{ formErrors.email }}
+          </span>
+        </div>
+
+        <div class="mb-4 form-group">
+          <label for="phone" class="col-form-label">Phone Number</label>
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.phone
+            }"
+            id="phone"
+            type="text"
+            placeholder=""
+            formControlName="phone"
+          />
+          <span class="invalid-feedback"> {{ formErrors.phone }} </span>
+        </div>
+
+        <div class="flex justify-between">
+          <button (click)="cancelupdate()" class="mt-4 btn btn-danger">
+            cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="profileForm.invalid"
+            class="mt-4 btn btn-primary"
+          >
+            submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

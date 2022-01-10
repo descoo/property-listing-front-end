@@ -1,0 +1,94 @@
+<div class="w-4/5 m-auto flex-col">
+  <div class="flex justify-center items-center mt-10">
+    <label>Filter By:</label>
+    <input
+      placeholder="Enter surname"
+      [(ngModel)]="filterBy"
+      type="text"
+      class="text-gray-600 rounded h-8 mt-2 w-40 ml-3"
+    />
+  </div>
+
+  <ul class="responsive-table my-10">
+    <li class="table-header bg-gray-300">
+      <div class="col col-all">Forenames</div>
+      <div class="col col-all">Surname</div>
+      <div class="col col-all">Email Adress</div>
+      <div class="col col-all">locked</div>
+      <div *ngIf="showActions" class="col col-all">Actions</div>
+    </li>
+    <div *ngFor="let user of filteredUsers">
+      <li
+        (click)="showUserAds(user)"
+        class="table-row"
+        [ngClass]="{ pointer: !showActions }"
+      >
+        <div class="col col-all">
+          {{ user.name }}
+        </div>
+        <div class="col col-all">
+          {{ user.surname }}
+        </div>
+        <div class="col col-all">{{ user.email }}</div>
+        <div class="col col-all">
+          <fa-icon *ngIf="user.isLocked" [icon]="faLock"></fa-icon>
+          <fa-icon *ngIf="!user.isLocked" [icon]="faLockOpen"></fa-icon>
+        </div>
+        <div *ngIf="showActions" class="col col-all">
+          <div>
+            <button
+              (click)="toggleHideActions(user.id)"
+              class="px-1 text-white bg-blue-400 rounded"
+            >
+              Actions...
+            </button>
+            <div
+              *ngIf="user.id === selectedId"
+              [ngClass]="{ hidden: ishidden }"
+              class="flex flex-col w-20 mt-1 space-y-1 text-sm bg-transparent"
+            >
+              <button
+                (click)="unlockAccount(user)"
+                *ngIf="user.isLocked"
+                class="w-40 px-1 text-white bg-blue-400 rounded"
+              >
+                unlock account
+              </button>
+              <button
+                (click)="showInput()"
+                class="w-40 px-1 text-white bg-blue-400 rounded"
+              >
+                change email
+              </button>
+
+              <div *ngIf="show">
+                <input
+                  [placeholder]="user.email"
+                  [(ngModel)]="email"
+                  type="text"
+                  class="text-gray-600 rounded h-8 mt-2 w-40"
+                />
+                <div class="flex justify-end w-40">
+                  <button
+                    class="
+                      mt-2
+                      px-2
+                      text-white
+                      bg-gradient-to-r
+                      from-green-300
+                      to-green-300
+                      rounded
+                    "
+                    (click)="changeUserEmail(user)"
+                  >
+                    save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </div>
+  </ul>
+</div>

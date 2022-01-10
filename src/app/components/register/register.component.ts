@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
 
 import { registerMessages } from 'src/app/helpers/validationmsgs';
+import { displayMessage } from 'src/app/helpers/helperFuncs';
 
 @Component({
   selector: 'app-register',
@@ -82,6 +83,7 @@ export class RegisterComponent implements OnInit {
         },
         { validator: this.matchingPasswords }
       ),
+      isLocked: ['unlock'],
     });
   }
 
@@ -93,28 +95,38 @@ export class RegisterComponent implements OnInit {
       surname,
       email,
       passwordGroup: { password },
+      isLocked,
     } = this.registerForm.value;
 
-    const userToRegister = { id: null, name, surname, email, password };
+    const userToRegister = {
+      id: null,
+      name,
+      surname,
+      email,
+      password,
+      isLocked,
+    };
 
     this.auth.registerUser(userToRegister).subscribe(
       (user) => {
         this.success();
         this.auth.changeCurrentUser(user);
       },
-      (error) => this.error(error)
+      () => {
+        this.error();
+      }
     );
   }
 
   matchingPasswords(c: AbstractControl): { [key: string]: boolean } | null {
-    const email = c.get('password');
+    const password = c.get('password');
     const confirm = c.get('confirm');
 
-    if (email?.pristine || confirm?.pristine) {
+    if (password?.pristine || confirm?.pristine) {
       return null;
     }
 
-    if (email?.value === confirm?.value) {
+    if (password?.value === confirm?.value) {
       return null;
     }
     return { matching: true };
@@ -122,20 +134,19 @@ export class RegisterComponent implements OnInit {
 
   success(): void {
     this.progressBarService.setSuccess();
-    this.progressBarService.setShowSuccess();
     this.progressBarService.completeLoading();
-    setTimeout(() => {
-      this.progressBarService.setShowDefaults();
-      this.router.navigate(['/home']);
-    }, 4000);
+    displayMessage('success', 'Registered successfully!');
+    this.router.navigate(['/home']);
   }
 
-  error(message: string): void {
+  error(): void {
     this.progressBarService.setError();
-    this.progressBarService.setShowError();
     this.progressBarService.completeLoading();
-    setTimeout(() => this.progressBarService.setShowDefaults(), 4000);
-    console.log(message);
+    displayMessage(
+      'error',
+      'Oops something went wrong! Try to register again',
+      2000
+    );
   }
 
   logValidationErrors(group: FormGroup = this.registerForm): void {

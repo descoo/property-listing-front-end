@@ -1,63 +1,115 @@
-<div class="py-10">
-  <div class="flex justify-end px-5 pb-5">
+<section class="py-10 mx-auto lg:w-3/4 md:w-7/12 sm:w-7/12">
+  <div class="flex justify-end mb-4">
     <button
       routerLink="/add"
-      class="px-2 py-1 text-white bg-green-400 rounded-lg"
+      class="
+        px-2
+        py-1
+        text-white
+        rounded
+        bg-gradient-to-r
+        from-pink-500
+        to-purple-600
+      "
     >
       Add New Advert
     </button>
   </div>
 
-  <div class="flex" *ngFor="let ad of adverts">
-    <div class="relative w-40 h-32">
-      <img
-        class="absolute object-contain w-auto h-auto rounded-xl"
-        src="{{ ad.imgUrl }}"
-      />
-    </div>
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
+    <article
+      class="flex justify-between overflow-hidden rounded shadow-md"
+      *ngFor="let ad of adverts$ | async"
+    >
+      <div class="w-2/5">
+        <img class="object-cover" src="{{ ad.imgUrl }}" />
+      </div>
 
-    <div class="px-2 ml-4">
-      <h3 class="font-medium">{{ ad.name }}</h3>
-      <div class="flex">
-        <h5 class="px-2 py-1 mr-2 text-sm bg-gray-100 rounded-2xl">
-          {{ ad.province }}
-        </h5>
-        <h5 class="px-2 py-1 text-sm bg-gray-100 rounded-2xl">
-          {{ ad.city }}
-        </h5>
+      <div class="text-gray-800">
+        <h3 class="text-xl font-bold">{{ ad.name }}</h3>
+        <div class="mt-1 mb-4">
+          <span
+            class="
+              px-1
+              py-0.5
+              mr-2
+              text-sm
+              tracking-tighter
+              bg-gray-100
+              rounded-2xl
+            "
+          >
+            {{ ad.province }}
+          </span>
+          <span
+            class="px-1 py-0.5 text-sm tracking-tighter bg-gray-100 rounded-2xl"
+          >
+            {{ ad.city }}
+          </span>
+        </div>
+        <p class="text-lg font-bold tracking-wide text-green-700">
+          {{ ad.price | currency: "ZAR":"symbol-narrow" }}
+        </p>
       </div>
-      <h3 class="text-red-600">R{{ ad.price }}</h3>
-      <div class="btns">
-        <button class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg">
-          Actions...
-        </button>
+
+      <div class="flex-column">
+        <div>
+          <button
+            (click)="toggleHideActions(ad.id)"
+            class="w-20 px-1 mt-1 mr-1 text-gray-600 bg-blue-200 rounded"
+          >
+            Actions...
+          </button>
+          <div
+            *ngIf="ad.id === selectedId"
+            [ngClass]="{ hidden: ishidden }"
+            class="flex flex-col w-20 mt-1 space-y-1 text-sm bg-transparent"
+          >
+            <button
+              [routerLink]="['/edit', ad.id]"
+              class="px-1 text-gray-600 bg-blue-200 rounded"
+            >
+              edit
+            </button>
+            <button
+              (click)="togglehideAdvert(ad)"
+              *ngIf="ad.hiddenStatus === false"
+              class="px-1 text-gray-600 bg-yellow-200 rounded"
+            >
+              hide
+            </button>
+            <button
+              (click)="togglehideAdvert(ad)"
+              *ngIf="ad.hiddenStatus === true"
+              class="px-1 text-gray-600 bg-green-200 rounded"
+            >
+              show
+            </button>
+            <button
+              (click)="deleteAdvert(ad)"
+              class="px-1 text-gray-600 bg-red-300 rounded"
+            >
+              delete
+            </button>
+          </div>
+        </div>
         <button
-          [routerLink]="['/edit', ad.id]"
-          class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg"
+          (click)="feature(ad)"
+          class="
+            w-20
+            px-1
+            mt-2
+            mr-1
+            text-white
+            bg-gradient-to-r
+            from-blue-400
+            to-purple-500
+            rounded
+          "
         >
-          edit
-        </button>
-        <button
-          (click)="togglehideAdvert(ad)"
-          *ngIf="ad.hiddenStatus === false"
-          class="px-2 py-1 text-gray-600 bg-yellow-200 rounded-lg"
-        >
-          hide
-        </button>
-        <button
-          (click)="togglehideAdvert(ad)"
-          *ngIf="ad.hiddenStatus === true"
-          class="px-2 py-1 text-gray-600 bg-green-200 rounded-lg"
-        >
-          show
-        </button>
-        <button
-          (click)="deleteAdvert(ad.id)"
-          class="px-2 py-1 text-gray-600 bg-blue-200 rounded-lg"
-        >
-          delete
+          {{ ad.featuredStatus ? "unfeature" : "feature" }}
         </button>
       </div>
-    </div>
+    </article>
   </div>
-</div>
+</section>

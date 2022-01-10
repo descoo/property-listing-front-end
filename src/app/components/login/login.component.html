@@ -1,22 +1,4 @@
 <div class="container pt-5">
-  <div class="flex justify-center">
-    <!-- Success Alert -->
-    <div
-      class="w-50 alert alert-success fade show"
-      *ngIf="progressBarService.showSuccess"
-    >
-      <strong>Success!</strong> Logged in successfully
-    </div>
-
-    <!-- Error Alert -->
-    <div
-      *ngIf="progressBarService.showError"
-      class="alert alert-danger fade show"
-    >
-      <strong>Error!</strong> Could not log you in, try to login again.
-    </div>
-  </div>
-
   <div class="justify-center pt-2 mt-20 row">
     <div class="pb-3 rounded-md shadow col-sm-4">
       <h1 class="pt-3 font-semibold text-center text-secondary">LOGIN</h1>

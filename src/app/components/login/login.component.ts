@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
 
 import { loginMessages } from 'src/app/helpers/validationmsgs';
+import { displayMessage } from 'src/app/helpers/helperFuncs';
 
 @Component({
   selector: 'app-login',
@@ -58,41 +59,33 @@ export class LoginComponent implements OnInit {
   // submit to backend
   logInUser(): void {
     this.progressBarService.startLoading();
-    this.auth.getUsers().subscribe(
-      (users) => {
-        const user = users.find(
-          (u) =>
-            this.loginForm.value.email === u.email &&
-            this.loginForm.value.password === u.password
-        );
-        if (user) {
-          this.auth.changeCurrentUser(user);
-          this.success();
-          this.loginForm.reset();
-        } else {
-          this.error('');
-        }
-      },
-      (error) => this.error(error)
-    );
+    this.auth.getUsers().subscribe((users) => {
+      const user = users.find(
+        (u) =>
+          this.loginForm.value.email === u.email &&
+          this.loginForm.value.password === u.password
+      );
+      if (user) {
+        this.auth.changeCurrentUser(user);
+        this.success();
+        this.loginForm.reset();
+      } else {
+        this.error();
+      }
+    });
   }
 
   success(): void {
     this.progressBarService.setSuccess();
     this.progressBarService.completeLoading();
-    this.progressBarService.setShowSuccess();
-    setTimeout(() => {
-      this.progressBarService.setShowDefaults();
-      this.router.navigate(['/home']);
-    }, 4000);
+    displayMessage('success', 'Logged in successfully!');
+    this.router.navigate(['/home']);
   }
 
-  error(message: string): void {
+  error(): void {
     this.progressBarService.setError();
-    this.progressBarService.setShowError();
     this.progressBarService.completeLoading();
-    setTimeout(() => this.progressBarService.setShowDefaults(), 4000);
-    console.log(message);
+    displayMessage('error', 'Oops something went wrong! Try to login again');
   }
 
   logValidationErrors(group: FormGroup = this.loginForm): void {

@@ -1,23 +1,4 @@
 <div class="container pt-5">
-  <div class="flex justify-center">
-    <!-- Success Alert -->
-    <div
-      class="w-50 alert alert-success fade show"
-      *ngIf="progressBarService.showSuccess"
-    >
-      <strong>Success!</strong> Registered successfully
-    </div>
-
-    <!-- Error Alert -->
-    <div
-      *ngIf="progressBarService.showError"
-      class="alert alert-danger fade show"
-    >
-      <strong>Error!</strong> A problem occured while registering user, try to
-      register again.
-    </div>
-  </div>
-
   <div class="justify-center pt-2 row">
     <div class="pb-3 rounded-md shadow col-sm-4">
       <h1 class="pt-3 font-semibold text-center text-secondary">REGISTER</h1>
@@ -129,6 +110,16 @@
               Passwords must match exactly
             </small>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label class="text-gray-600 col-form-label">Lock Account</label>
+          <input
+            type="radio"
+            formControlName="isLocked"
+            value="unlock"
+          />Unlocked
+          <input type="radio" formControlName="isLocked" value="lock" />Locked
         </div>
 
         <button

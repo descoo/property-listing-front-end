@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
       this.success();
       this.auth.logout();
       this.router.navigate(['/home']);
-    }, 4000);
+    }, 2000);
   }
 
   success(): void {

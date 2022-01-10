@@ -15,9 +15,9 @@ const cities = [
   { province: 'North West', cities: ['Rustenburg'] },
   { province: 'Eastern Cape', cities: ['Nelson Mandela Bay', 'Gheberha'] },
   { province: 'Western Cape', cities: ['Cape Town', 'Stellenbosch'] },
-  { province: 'Northern Cape', cities: ['Kiberly'] },
+  { province: 'Northern Cape', cities: ['Kimberly', 'Port Nolloth'] },
   { province: 'Limpopo', cities: ['Polokwane'] },
-  { province: 'Mpumalanga', cities: ['Johannesburg', 'Pretoria'] },
+  { province: 'Mpumalanga', cities: ['Nelspruit', 'Witbank'] },
   { province: 'Free State', cities: ['Bloemfontein', 'Welkom'] },
   { province: 'Kwa-Zulu Natal', cities: ['Durban', 'Pietermaritzburg'] },
 ];

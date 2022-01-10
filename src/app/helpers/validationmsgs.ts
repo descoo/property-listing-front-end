@@ -14,6 +14,10 @@ const registerMessages = {
     email: 'Enter a valid email address',
     minlength: 'Email must be atleast 3 characters long',
   },
+  oldPassword: {
+    required: '',
+    matching: 'Enter the correct old password',
+  },
   password: {
     required: 'Password is required',
     minlength: 'Password must be atleast 8 characters long',
@@ -51,15 +55,39 @@ const createEditMessages = {
 
 const loginMessages = {
   email: {
-    required: 'email is required',
-    email: 'Enter a valid email address',
+    required: '',
     minlength: '',
+    email: 'Enter a valid email address',
+    maxlength: 'Email must not exceed 100 characters',
   },
   password: {
     required: 'Password is required',
     minlength: 'Password must be atleast 3 characters long',
     maxlength: ' Password must be atmost 100 characters long',
   },
+  phone: {
+    minlength: 'Phone number must be atleast 6 characters long',
+    maxlength: ' Phone number must be atmost 100 characters long',
+  },
 };
 
-export { registerMessages, loginMessages, createEditMessages };
+const contactMessages = {
+  name: {
+    required: 'Name is required',
+    minlength: 'Name must be atleast 5 characters long',
+    maxlength: ' Name must be atmost 100 characters long',
+  },
+  email: {
+    required: 'email is required',
+    email: 'Enter a valid email address',
+    minlength: '',
+    maxlength: ' Name must be atmost 100 characters long',
+  },
+  message: {
+    required: 'Message is required',
+    minlength: 'Message must be atleast 10 characters long',
+    maxlength: ' Message must be atmost 2000 characters long',
+  },
+};
+
+export { registerMessages, loginMessages, createEditMessages, contactMessages };

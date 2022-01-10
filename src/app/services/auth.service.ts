@@ -4,9 +4,13 @@ import {
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, delay } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { catchError, delay, map } from 'rxjs/operators';
 import { User } from '../models/user.model';
+
+const headers = new HttpHeaders({
+  'Content-Type': 'application/json',
+});
 
 @Injectable({
   providedIn: 'root',
@@ -19,13 +23,16 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   registerUser(user: User): Observable<User> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-
     return this.http
       .post<User>(this.url, user, { headers: headers })
       .pipe(delay(2000), catchError(this.handleError));
+  }
+
+  getCurrentUser(): Observable<User> {
+    const currentUser: User = JSON.parse(
+      localStorage.getItem('currentUser') || '{}'
+    );
+    return of(currentUser).pipe(delay(2000));
   }
 
   getUsers(): Observable<User[]> {
@@ -34,11 +41,36 @@ export class AuthService {
       .pipe(delay(2000), catchError(this.handleError));
   }
 
+  getSingleUser(id: number | null): Observable<User> {
+    return this.http
+      .get<User>(`${this.url}/${id}`)
+      .pipe(delay(2000), catchError(this.handleError));
+  }
+
+  editUser(user: User): Observable<User> {
+    return this.http
+      .put<User>(`${this.url}/${user.id}`, user, { headers: headers })
+      .pipe(
+        map(() => user),
+        delay(2000),
+        catchError(this.handleError)
+      );
+  }
+
+  unlockAccount(user: User): Observable<User> {
+    user.isLocked = !user.isLocked;
+    return this.http
+      .put<User>(`${this.url}/${user.id}`, user, { headers: headers })
+      .pipe(
+        map(() => user),
+        delay(2000),
+        catchError(this.handleError)
+      );
+  }
+
   logout(): void {
-    setTimeout(() => {
-      localStorage.removeItem('currentUser');
-      this.currentUser.next('');
-    }, 2000);
+    localStorage.removeItem('currentUser');
+    this.currentUser.next('');
   }
 
   autoLogin(): void {

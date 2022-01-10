@@ -8,15 +8,12 @@ import { delay } from 'rxjs/operators';
   styleUrls: ['./sub-header.component.css'],
 })
 export class SubHeaderComponent implements OnInit {
-  userName!: string;
   userId!: number | null;
   constructor(private auth: AuthService) {
-    this.auth.currentUser$.pipe(delay(4000)).subscribe((user) => {
+    this.auth.currentUser$.pipe(delay(2000)).subscribe((user) => {
       if (user) {
-        this.userName = user.name;
         this.userId = user.id;
       } else {
-        this.userName = '';
         this.userId = null;
       }
     });

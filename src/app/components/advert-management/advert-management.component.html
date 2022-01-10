@@ -1,0 +1,83 @@
+<app-user-management (getads)="getUserAds($event)"></app-user-management>
+
+<section *ngIf="showAdverts" class="mx-auto lg:w-4/5 md:w-7/12 sm:w-7/12">
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
+    <article
+      class="flex justify-between overflow-hidden rounded shadow-md"
+      *ngFor="let ad of filteredAds"
+    >
+      <div class="w-2/5">
+        <img class="object-cover" src="{{ ad.imgUrl }}" />
+      </div>
+
+      <div class="text-gray-800">
+        <h3 class="text-xl font-bold">{{ ad.name }}</h3>
+        <div class="mt-1 mb-4">
+          <span
+            class="
+              px-1
+              py-0.5
+              mr-2
+              text-sm
+              tracking-tighter
+              bg-gray-100
+              rounded-2xl
+            "
+          >
+            {{ ad.province }}
+          </span>
+          <span
+            class="px-1 py-0.5 text-sm tracking-tighter bg-gray-100 rounded-2xl"
+          >
+            {{ ad.city }}
+          </span>
+        </div>
+        <p class="text-lg font-bold tracking-wide text-green-700">
+          {{ ad.price | currency: "ZAR":"symbol-narrow" }}
+        </p>
+      </div>
+
+      <div class="flex-column">
+        <div>
+          <button
+            (click)="toggleHideActions(ad.id)"
+            class="w-20 px-1 mt-1 mr-1 text-gray-600 bg-blue-200 rounded"
+          >
+            Status...
+          </button>
+          <div
+            *ngIf="ad.id === selectedId"
+            [ngClass]="{ hidden: ishidden }"
+            class="flex flex-col w-20 mt-1 space-y-1 text-sm bg-transparent"
+          >
+            <button
+              (click)="togglehideAdvert(ad)"
+              class="px-1 text-white bg-blue-400 rounded"
+            >
+              {{ ad.hiddenStatus ? "show" : "hide" }}
+            </button>
+            <button
+              (click)="deleteAdvert(ad)"
+              class="px-1 text-white bg-blue-400 rounded"
+            >
+              {{ ad.deleteStatus ? "recover" : "delete" }}
+            </button>
+            <button
+              (click)="feature(ad)"
+              class="
+                px-1
+                text-white
+                bg-gradient-to-r
+                from-blue-400
+                to-purple-500
+                rounded
+              "
+            >
+              {{ ad.featuredStatus ? "unfeature" : "feature" }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

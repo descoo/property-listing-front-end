@@ -1,0 +1,163 @@
+<div class="container pt-5">
+  <div class="flex justify-center">
+    <!-- Success Alert -->
+    <div
+      class="w-50 alert alert-success fade show"
+      *ngIf="progressBarService.showSuccess"
+    >
+      <strong>Success!</strong> Registered successfully
+    </div>
+
+    <!-- Error Alert -->
+    <div
+      *ngIf="progressBarService.showError"
+      class="alert alert-danger fade show"
+    >
+      <strong>Error!</strong> A problem occured while registering user, try to
+      register again.
+    </div>
+  </div>
+
+  <div class="justify-center pt-2 row">
+    <div class="pb-3 rounded-md shadow col-sm-4">
+      <h1 class="pt-3 font-semibold text-center text-secondary">EDIT USER</h1>
+      <form
+        class="px-5"
+        (ngSubmit)="editUser()"
+        [formGroup]="accountForm"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="name" class="text-gray-600 col-form-label"
+            >Full Name:</label
+          >
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.name
+            }"
+            id="name"
+            type="text"
+            placeholder="*required"
+            formControlName="name"
+            (blur)="logValidationErrors()"
+          />
+          <small class="invalid-feedback"> {{ formErrors.name }} </small>
+        </div>
+
+        <div class="form-group">
+          <label for="Surname" class="text-gray-600 col-form-label"
+            >Surname</label
+          >
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.surname
+            }"
+            id="surname"
+            type="text"
+            placeholder="*required"
+            formControlName="surname"
+            (blur)="logValidationErrors()"
+          />
+          <small class="invalid-feedback">
+            {{ formErrors.surname }}
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="text-gray-600 col-form-label">Email</label>
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.email
+            }"
+            id="email"
+            type="email"
+            placeholder="*required"
+            formControlName="email"
+            (blur)="logValidationErrors()"
+          />
+          <small class="invalid-feedback">{{ formErrors.email }} </small>
+        </div>
+
+        <div class="form-group">
+          <label for="oldPassword" class="text-gray-600 col-form-label"
+            >Old Password</label
+          >
+          <input
+            class="text-gray-600 rounded-md form-control h-9"
+            [ngClass]="{
+              'is-invalid': formErrors.oldPassword
+            }"
+            id="oldPassword"
+            type="password"
+            placeholder="*required"
+            formControlName="oldPassword"
+            (blur)="logValidationErrors()"
+          />
+          <small class="invalid-feedback">
+            {{ formErrors.oldPassword }}
+          </small>
+        </div>
+
+        <div formGroupName="passwordGroup">
+          <div class="form-group">
+            <label for="password" class="text-gray-600 col-form-label"
+              >Password</label
+            >
+            <input
+              class="text-gray-600 rounded-md form-control h-9"
+              [ngClass]="{
+                'is-invalid': formErrors.password
+              }"
+              id="password"
+              type="password"
+              placeholder="*required"
+              formControlName="password"
+              (blur)="logValidationErrors()"
+            />
+            <small class="invalid-feedback">
+              {{ formErrors.password }}
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm" class="text-gray-600 col-form-label"
+              >Confirm Password</label
+            >
+            <input
+              class="text-gray-600 rounded-md form-control h-9"
+              [ngClass]="{
+                'is-invalid':
+                  formErrors.confirm || accountForm.get('passwordGroup')?.errors
+              }"
+              id="confirm"
+              type="password"
+              placeholder="*required"
+              formControlName="confirm"
+              (blur)="logValidationErrors()"
+            />
+            <small class="invalid-feedback">
+              {{ formErrors.confirm }}
+            </small>
+            <small
+              *ngIf="accountForm.get('passwordGroup')?.errors"
+              class="invalid-feedback"
+            >
+              Passwords must match exactly
+            </small>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="accountForm.invalid"
+          class="mt-4 btn btn-primary"
+        >
+          Save Edits
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, delay, map } from 'rxjs/operators';
+import { catchError, delay, map, tap } from 'rxjs/operators';
 import { Ad, User } from '../models/user.model';
 
 const headers = new HttpHeaders({
@@ -18,21 +18,52 @@ const headers = new HttpHeaders({
 export class AdvertsService {
   private currentUser!: User;
   private advertUrl = 'api/adverts';
+  private _searchBy!: string;
+
+  get searchBy(): string {
+    return this._searchBy;
+  }
+  set searchBy(value: string) {
+    this._searchBy = value;
+  }
+
+  private _priceSearch!: { min: string; max: string };
+
+  get priceSearch(): { min: string; max: string } {
+    return this._priceSearch;
+  }
+  set priceSearch(value: { min: string; max: string }) {
+    this._priceSearch = value;
+  }
+
+  constructor(private http: HttpClient) {}
 
   getUserName(): string {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     return user.name;
   }
-  constructor(private http: HttpClient) {}
+
   getUser(): Observable<User> {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
     return of(this.currentUser);
   }
 
-  getAdverts(): Observable<Ad[]> {
+  getAllAdverts(): Observable<Ad[]> {
     return this.http
       .get<Ad[]>(this.advertUrl)
       .pipe(delay(2000), catchError(this.handleError));
+  }
+
+  getCurrentUserAdverts(): Observable<Ad[]> {
+    let author!: string;
+    this.getUser().subscribe((user) => {
+      author = user.name;
+    });
+    return this.http.get<Ad[]>(this.advertUrl).pipe(
+      map((ad) => ad.filter((ad) => ad.author === author)),
+      delay(2000),
+      catchError(this.handleError)
+    );
   }
 
   getSingleAdvert(id: number): Observable<Ad> {
@@ -45,6 +76,7 @@ export class AdvertsService {
     const name = this.getUserName();
     advert.author = name;
     advert.hiddenStatus = false;
+    advert.imgUrl = '/assets/images/house.jpg';
     return this.http
       .post<Ad>(this.advertUrl, advert, { headers })
       .pipe(delay(2000), catchError(this.handleError));
@@ -57,6 +89,7 @@ export class AdvertsService {
   }
 
   toggleHide(ad: Ad): Observable<Ad> {
+    ad.hiddenStatus = !ad.hiddenStatus;
     const url = `${this.advertUrl}/${ad.id}`;
     return this.http.put<Ad>(url, ad, { headers }).pipe(
       map(() => ad),
@@ -65,14 +98,11 @@ export class AdvertsService {
     );
   }
 
-  deleteAdvert(id: number): Observable<Ad> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-
+  deleteAdvert(ad: Ad): Observable<Ad> {
+    ad.deleteStatus = !ad.deleteStatus;
     return this.http
-      .delete<Ad>(`${this.advertUrl}/${id}`, { headers: headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .put<Ad>(`${this.advertUrl}/${ad.id}`, ad, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(err: HttpErrorResponse) {

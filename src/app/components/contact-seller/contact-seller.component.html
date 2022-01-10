@@ -1,0 +1,116 @@
+<article
+  class="flex items-center p-4 overflow-hidden text-gray-800 rounded shadow-md"
+>
+  <div class="flex-shrink-0">
+    <img
+      class="object-cover w-24 h-24 rounded-full"
+      src="{{ advert.imgUrl }}"
+    />
+  </div>
+
+  <div *ngIf="seller" class="ml-4">
+    <h3 class="text-xl font-bold">{{ seller.name }} {{ seller.surname }}</h3>
+    <p class="text-gray-700">{{ seller.phone }}</p>
+    <p class="text-gray-700">{{ seller.email }}</p>
+  </div>
+</article>
+
+<div class="pb-3 mt-8 rounded-md shadow-md">
+  <h3 class="text-xl font-bold text-center">Contact Us</h3>
+  <form
+    class="px-5"
+    (ngSubmit)="sendMessage()"
+    [formGroup]="contactForm"
+    novalidate
+  >
+    <div class="form-group">
+      <label for="name" class="font-medium text-gray-500 col-form-label"
+        >Your Name</label
+      >
+      <input
+        class="text-gray-600 rounded-md form-control h-9"
+        [ngClass]="{
+          'is-invalid': formErrors.name
+        }"
+        id="name"
+        type="text"
+        placeholder="*required"
+        formControlName="name"
+        (blur)="logValidationErrors()"
+      />
+      <span class="invalid-feedback">
+        {{ formErrors.name }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="font-medium text-gray-500 col-form-label"
+        >Your Email</label
+      >
+      <input
+        class="text-gray-600 rounded-md form-control h-9"
+        [ngClass]="{
+          'is-invalid': formErrors.email
+        }"
+        id="email"
+        type="email"
+        placeholder="*required"
+        formControlName="email"
+      />
+      <span class="invalid-feedback">
+        {{ formErrors.email }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="number" class="font-medium text-gray-500 col-form-label"
+        >Your Number</label
+      >
+      <input
+        class="text-gray-600 rounded-md form-control h-9"
+        [ngClass]="{
+          'is-invalid': formErrors.number
+        }"
+        id="number"
+        type="text"
+        placeholder=""
+        formControlName="number"
+        (blur)="logValidationErrors()"
+      />
+      <span class="invalid-feedback">
+        {{ formErrors.number }}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="message" class="font-medium text-gray-500 col-form-label"
+        >Message</label
+      >
+      <textarea
+        class="text-gray-600 rounded-md form-control"
+        [ngClass]="{
+          'is-invalid': formErrors.message
+        }"
+        id="message"
+        rows="3"
+        placeholder="*required"
+        formControlName="message"
+        (blur)="logValidationErrors()"
+      >
+      </textarea>
+      <span class="invalid-feedback">
+        {{ formErrors.message }}
+      </span>
+    </div>
+
+    <div class="mt-4">
+      <button
+        type="submit"
+        [disabled]="contactForm.invalid"
+        class="btn btn-primary"
+      >
+        Send Message
+      </button>
+    </div>
+  </form>
+</div>

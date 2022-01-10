@@ -1,0 +1,44 @@
+<section *ngIf="ad" class="w-6/12 mx-auto">
+  <article class="mt-10 overflow-hidden rounded-lg shadow-md">
+    <div class="">
+      <img class="object-cover" src="{{ ad?.imgUrl }}" />
+    </div>
+
+    <div class="px-3 py-4 text-gray-800">
+      <div>
+        <span
+          class="px-2 py-1 mr-2 text-sm tracking-tight bg-gray-100 rounded-2xl"
+        >
+          {{ ad?.province }}
+        </span>
+        <span class="px-2 py-1 text-sm tracking-tight bg-gray-100 rounded-2xl">
+          {{ ad?.city }}
+        </span>
+      </div>
+      <h3 class="mt-4 text-xl font-bold">{{ ad?.name }}</h3>
+      <p class="text-sm text-gray-700">{{ ad?.advertDetails }}</p>
+
+      <div class="flex justify-between">
+        <p class="mt-4 text-lg font-bold tracking-wide text-green-700">
+          {{ ad?.price | currency: "ZAR":"symbol-narrow" }}
+        </p>
+        <button
+          (click)="addAdToFavorites(ad)"
+          class="
+            px-1
+            text-white
+            rounded
+            bg-gradient-to-r
+            from-blue-600
+            to-blue-700
+          "
+        >
+          Add To Favourites
+        </button>
+      </div>
+    </div>
+  </article>
+  <div class="mt-8 lg:w-3/4">
+    <app-contact-seller [advert]="ad"></app-contact-seller>
+  </div>
+</section>
