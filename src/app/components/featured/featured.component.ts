@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
 import { FeaturedService } from 'src/app/services/featured.service';
@@ -14,8 +15,9 @@ SwiperCore.use([Navigation]);
   templateUrl: './featured.component.html',
   styleUrls: ['./featured.component.css'],
 })
-export class FeaturedComponent implements OnInit {
+export class FeaturedComponent implements OnInit, OnDestroy {
   adverts!: Ad[];
+  sub!: Subscription;
 
   constructor(
     private featuredService: FeaturedService,
@@ -29,7 +31,7 @@ export class FeaturedComponent implements OnInit {
 
   getAdverts(): void {
     this.progressBarService.startLoading();
-    this.featuredService.getFeaturedAdverts().subscribe((ads) => {
+    this.sub = this.featuredService.getFeaturedAdverts().subscribe((ads) => {
       this.adverts = ads;
       this.adverts.sort((a: Ad, b: Ad) => {
         if (b.id && a.id) {
@@ -68,4 +70,8 @@ export class FeaturedComponent implements OnInit {
       },
     },
   };
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
 }

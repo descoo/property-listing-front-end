@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
@@ -8,15 +8,18 @@ import { ProgressbarService } from 'src/app/services/progressbar.service';
 
 import { loginMessages } from 'src/app/helpers/validationmsgs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   errorMessage!: string;
+  sub!: Subscription;
+
   validationMessages: any = loginMessages;
 
   formErrors: any = {
@@ -34,9 +37,11 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.createForm();
 
-    this.loginForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-      this.logValidationErrors(this.loginForm);
-    });
+    this.sub = this.loginForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.loginForm);
+      });
   }
 
   createForm(): void {
@@ -59,7 +64,7 @@ export class LoginComponent implements OnInit {
   // submit to backend
   logInUser(): void {
     this.progressBarService.startLoading();
-    this.auth.getUsers().subscribe((users) => {
+    this.sub = this.auth.getUsers().subscribe((users) => {
       const user = users.find(
         (u) =>
           this.loginForm.value.email === u.email &&
@@ -106,5 +111,9 @@ export class LoginComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

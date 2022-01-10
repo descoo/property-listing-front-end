@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -38,7 +38,7 @@ function checkOldPassword(oldPass: string = pass): ValidatorFn {
   templateUrl: './account-page.component.html',
   styleUrls: ['./account-page.component.css'],
 })
-export class AccountPageComponent implements OnInit {
+export class AccountPageComponent implements OnInit, OnDestroy {
   accountForm!: FormGroup;
   errorMessage!: string;
   validationMessages: any = registerMessages;
@@ -66,9 +66,11 @@ export class AccountPageComponent implements OnInit {
     this.getUserData();
     this.createForm();
 
-    this.accountForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-      this.logValidationErrors(this.accountForm);
-    });
+    this.sub = this.accountForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.accountForm);
+      });
   }
 
   getUserData(): void {
@@ -152,7 +154,7 @@ export class AccountPageComponent implements OnInit {
       password,
       isLocked,
     };
-    this.auth.editUser(user).subscribe((user) => {
+    this.sub = this.auth.editUser(user).subscribe((user) => {
       this.auth.changeCurrentUser(user);
       this.success();
       displayMessage('success', 'Your account was edited successfully!');
@@ -207,5 +209,9 @@ export class AccountPageComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

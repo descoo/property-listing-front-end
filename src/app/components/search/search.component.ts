@@ -1,6 +1,13 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { cities, provinces } from 'src/app/helpers/locations-data';
 import { AdvertsService } from 'src/app/services/adverts.service';
@@ -10,7 +17,7 @@ import { AdvertsService } from 'src/app/services/adverts.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;
   province!: string;
   provincesToSelectFrom = provinces;
@@ -24,6 +31,7 @@ export class SearchComponent implements OnInit {
   maxPriceRanges!: number[];
   minPriceRanges!: number[];
   minmaxRanges = { min: '', max: '' };
+  sub!: Subscription | undefined;
 
   @Output() filter: EventEmitter<string> = new EventEmitter<string>();
   @Output() minmaxfilter: EventEmitter<{ min: string; max: string }> =
@@ -46,7 +54,7 @@ export class SearchComponent implements OnInit {
   }
 
   getPrices(): void {
-    this.adService
+    this.sub = this.adService
       .getAllAdverts()
       .pipe(map((ad) => ad.map((ad) => ad.price)))
       .subscribe((price) => {
@@ -132,7 +140,7 @@ export class SearchComponent implements OnInit {
         this.citiesToSelectFrom = key.cities;
       }
     }
-    this.searchForm.get('city')?.valueChanges.subscribe((city) => {
+    this.sub = this.searchForm.get('city')?.valueChanges.subscribe((city) => {
       if (city) {
         this.searchBy = city;
       }
@@ -140,23 +148,29 @@ export class SearchComponent implements OnInit {
   }
 
   provinceSelectionWatcher(): void {
-    this.searchForm.get('province')?.valueChanges.subscribe((province) => {
-      this.province = province;
-      this.searchBy = province;
-      this.citiesBasedOnProvinceSelection(province);
-    });
+    this.sub = this.searchForm
+      .get('province')
+      ?.valueChanges.subscribe((province) => {
+        this.province = province;
+        this.searchBy = province;
+        this.citiesBasedOnProvinceSelection(province);
+      });
   }
 
   maxPriceSelectionWatcher(): void {
-    this.searchForm.get('min')?.valueChanges.subscribe((price) => {
+    this.sub = this.searchForm.get('min')?.valueChanges.subscribe((price) => {
       this.maxSearchBy = price;
       this.minmaxRanges.min = price;
     });
   }
   minPriceSelectionWatcher(): void {
-    this.searchForm.get('max')?.valueChanges.subscribe((price) => {
+    this.sub = this.searchForm.get('max')?.valueChanges.subscribe((price) => {
       this.minSearchBy = price;
       this.minmaxRanges.max = price;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 }

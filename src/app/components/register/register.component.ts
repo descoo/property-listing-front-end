@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -12,16 +12,18 @@ import { ProgressbarService } from 'src/app/services/progressbar.service';
 
 import { registerMessages } from 'src/app/helpers/validationmsgs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   errorMessage!: string;
   validationMessages: any = registerMessages;
+  sub!: Subscription;
 
   formErrors: any = {
     name: '',
@@ -41,9 +43,11 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.createForm();
 
-    this.registerForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-      this.logValidationErrors(this.registerForm);
-    });
+    this.sub = this.registerForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.registerForm);
+      });
   }
 
   // create form
@@ -107,7 +111,7 @@ export class RegisterComponent implements OnInit {
       isLocked,
     };
 
-    this.auth.registerUser(userToRegister).subscribe(
+    this.sub = this.auth.registerUser(userToRegister).subscribe(
       (user) => {
         this.success();
         this.auth.changeCurrentUser(user);
@@ -171,5 +175,9 @@ export class RegisterComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

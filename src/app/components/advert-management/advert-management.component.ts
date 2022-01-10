@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { Ad, User } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
@@ -11,12 +12,13 @@ import Swal from 'sweetalert2';
   templateUrl: './advert-management.component.html',
   styleUrls: ['./advert-management.component.css'],
 })
-export class AdvertManagementComponent implements OnInit {
+export class AdvertManagementComponent implements OnInit, OnDestroy {
   adverts!: Ad[];
   filteredAds!: Ad[];
   showAdverts = false;
   selectedId!: number | null;
   ishidden: boolean = true;
+  sub!: Subscription;
 
   constructor(
     private adService: AdvertsService,
@@ -36,7 +38,7 @@ export class AdvertManagementComponent implements OnInit {
   }
 
   getAllAds(): void {
-    this.adService.getAllAdverts().subscribe((ads) => {
+    this.sub = this.adService.getAllAdverts().subscribe((ads) => {
       this.adverts = ads;
       this.filteredAds = ads;
     });
@@ -44,7 +46,7 @@ export class AdvertManagementComponent implements OnInit {
 
   feature(ad: Ad): void {
     if ((ad.featuredStatus = true)) {
-      this.featureService.removeFromFeatured(ad).subscribe(
+      this.sub = this.featureService.removeFromFeatured(ad).subscribe(
         () => {
           displayMessage('success', 'Advert updated successfully');
         },
@@ -53,7 +55,7 @@ export class AdvertManagementComponent implements OnInit {
         }
       );
     } else {
-      this.featureService.adToFeatured(ad).subscribe(
+      this.sub = this.featureService.adToFeatured(ad).subscribe(
         () => {
           displayMessage('success', 'Advert updated successfully');
         },
@@ -76,7 +78,7 @@ export class AdvertManagementComponent implements OnInit {
       if (confirmed.isConfirmed) {
         this.progressBarService.startLoading();
         this.selectedId = ad.id;
-        this.adService.deleteAdvert(ad).subscribe(() => {
+        this.sub = this.adService.deleteAdvert(ad).subscribe(() => {
           const newAds = this.filteredAds.filter(
             (ad) => ad.id !== this.selectedId
           );
@@ -90,7 +92,7 @@ export class AdvertManagementComponent implements OnInit {
   }
 
   togglehideAdvert(ad: Ad): void {
-    this.adService.toggleHide(ad).subscribe();
+    this.sub = this.adService.toggleHide(ad).subscribe();
   }
 
   toggleHideActions(id: number | null): void {
@@ -107,5 +109,9 @@ export class AdvertManagementComponent implements OnInit {
     this.progressBarService.setError();
     this.progressBarService.completeLoading();
     displayMessage('error', 'Oops something went wrong!');
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

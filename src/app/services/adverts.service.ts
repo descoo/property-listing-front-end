@@ -4,7 +4,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, delay, map, tap } from 'rxjs/operators';
 import { Ad, User } from '../models/user.model';
 

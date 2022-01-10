@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, Observable, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
@@ -14,10 +14,11 @@ import Swal from 'sweetalert2';
   templateUrl: './adverts.component.html',
   styleUrls: ['./adverts.component.css'],
 })
-export class AdvertsComponent implements OnInit {
+export class AdvertsComponent implements OnInit, OnDestroy {
   adverts$!: Observable<Ad[]>;
   selectedId!: number | null;
   ishidden: boolean = true;
+  sub!: Subscription;
 
   constructor(
     private router: Router,
@@ -42,7 +43,7 @@ export class AdvertsComponent implements OnInit {
   }
 
   feature(ad: Ad): void {
-    this.featureService.adToFeatured(ad).subscribe(
+    this.sub = this.featureService.adToFeatured(ad).subscribe(
       (ad) => {
         console.log(ad);
         displayMessage('success', 'Advert updated successfully');
@@ -54,7 +55,7 @@ export class AdvertsComponent implements OnInit {
   }
 
   togglehideAdvert(ad: Ad): void {
-    this.advertsService.toggleHide(ad).subscribe();
+    this.sub = this.advertsService.toggleHide(ad).subscribe();
   }
 
   deleteAdvert(ad: Ad): void {
@@ -70,9 +71,9 @@ export class AdvertsComponent implements OnInit {
         this.progressBarService.startLoading();
         this.selectedId = ad.id;
         let filteredAds!: Ad[];
-        this.adverts$.subscribe((ads) => {
+        this.sub = this.adverts$.subscribe((ads) => {
           if (ads) filteredAds = ads;
-          this.advertsService.deleteAdvert(ad).subscribe(() => {
+          this.sub = this.advertsService.deleteAdvert(ad).subscribe(() => {
             this.adverts$ = of(
               filteredAds.filter((ad) => ad.id !== this.selectedId)
             );
@@ -101,5 +102,9 @@ export class AdvertsComponent implements OnInit {
     this.progressBarService.completeLoading();
     displayMessage('error', 'Oops something went wrong!');
     this.router.navigate(['/home']);
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
 import { FavouritesService } from 'src/app/services/favourites.service';
@@ -10,9 +11,10 @@ import { ProgressbarService } from 'src/app/services/progressbar.service';
   templateUrl: './favourites.component.html',
   styleUrls: ['./favourites.component.css'],
 })
-export class FavouritesComponent implements OnInit {
+export class FavouritesComponent implements OnInit, OnDestroy {
   adverts!: Ad[];
   filteredAds!: Ad[];
+  sub!: Subscription;
   constructor(
     private router: Router,
     private favouritesService: FavouritesService,
@@ -25,21 +27,23 @@ export class FavouritesComponent implements OnInit {
 
   getAdverts(): void {
     this.progressBarService.startLoading();
-    this.favouritesService.getFavouriteAds().subscribe((ads) => {
+    (this.sub = this.favouritesService.getFavouriteAds().subscribe((ads) => {
       this.adverts = ads;
       this.filteredAds = ads;
       this.success();
-    }),
+    })),
       () => this.error();
   }
 
   deleteAdvert(id: number | null): void {
     this.progressBarService.startLoading();
-    this.favouritesService.removeFromFavourites(id).subscribe(() => {
-      const newAds = this.filteredAds.filter((ad) => ad.id !== id);
-      this.filteredAds = newAds;
-      this.success();
-    }),
+    (this.sub = this.favouritesService
+      .removeFromFavourites(id)
+      .subscribe(() => {
+        const newAds = this.filteredAds.filter((ad) => ad.id !== id);
+        this.filteredAds = newAds;
+        this.success();
+      })),
       () => this.error();
   }
 
@@ -57,5 +61,9 @@ export class FavouritesComponent implements OnInit {
     this.progressBarService.completeLoading();
     displayMessage('error', 'Oops something went wrong!');
     this.router.navigate(['/home']);
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { contactMessages } from 'src/app/helpers/validationmsgs';
@@ -11,8 +12,9 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './contact-seller.component.html',
   styleUrls: ['./contact-seller.component.css'],
 })
-export class ContactSellerComponent implements OnInit {
+export class ContactSellerComponent implements OnInit, OnDestroy {
   @Input() advert!: Ad;
+  sub!: Subscription;
 
   seller!: User;
 
@@ -32,9 +34,11 @@ export class ContactSellerComponent implements OnInit {
     this.getSellerInfo();
     this.createForm();
 
-    this.contactForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-      this.logValidationErrors(this.contactForm);
-    });
+    this.sub = this.contactForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.contactForm);
+      });
   }
 
   createForm(): void {
@@ -69,7 +73,7 @@ export class ContactSellerComponent implements OnInit {
   }
 
   getSellerInfo(): void {
-    this.auth.getUsers().subscribe((users) => {
+    this.sub = this.auth.getUsers().subscribe((users) => {
       const seller = users.find((u) => u.name === this.advert.author);
       if (seller) {
         this.seller = seller;
@@ -95,5 +99,9 @@ export class ContactSellerComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

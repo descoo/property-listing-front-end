@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Ad } from 'src/app/models/user.model';
@@ -16,12 +16,12 @@ import { displayMessage } from 'src/app/helpers/helperFuncs';
   templateUrl: './create-edit-advert.component.html',
   styleUrls: ['./create-edit-advert.component.css'],
 })
-export class CreateEditAdvertComponent implements OnInit {
+export class CreateEditAdvertComponent implements OnInit, OnDestroy {
   advertForm!: FormGroup;
   errorMessage!: string;
   advertId!: number;
   province!: string;
-  sub!: Subscription;
+  sub!: Subscription | undefined;
   advert!: Ad;
 
   provincesToSelectFrom = provinces;
@@ -54,7 +54,7 @@ export class CreateEditAdvertComponent implements OnInit {
 
   // get object
   routeWatcher(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.sub = this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
       if (!id) return;
       this.getAdvertData(id);
@@ -63,7 +63,7 @@ export class CreateEditAdvertComponent implements OnInit {
   }
   getAdvertData(id: number): void {
     this.progressBarService.startLoading();
-    this.sub = this.advertsService.getSingleAdvert(id).subscribe(
+    this.sub = this.sub = this.advertsService.getSingleAdvert(id).subscribe(
       (ad: Ad) => {
         this.advert = ad;
         this.advertForm.patchValue({
@@ -134,16 +134,20 @@ export class CreateEditAdvertComponent implements OnInit {
   }
 
   provinceSelectionWatcher(): void {
-    this.advertForm.get('province')?.valueChanges.subscribe((province) => {
-      this.province = province;
-      this.citiesBasedOnProvinceSelection(province);
-    });
+    this.sub = this.advertForm
+      .get('province')
+      ?.valueChanges.subscribe((province) => {
+        this.province = province;
+        this.citiesBasedOnProvinceSelection(province);
+      });
   }
 
   formWatcher(): void {
-    this.advertForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-      this.logValidationErrors(this.advertForm);
-    });
+    this.sub = this.advertForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.advertForm);
+      });
   }
 
   // submit to backend
@@ -152,7 +156,7 @@ export class CreateEditAdvertComponent implements OnInit {
       // create object from form
       const editedAd = { ...this.advert, ...this.advertForm.value };
       this.progressBarService.startLoading();
-      this.advertsService.updateAdvert(editedAd).subscribe(
+      this.sub = this.advertsService.updateAdvert(editedAd).subscribe(
         () => {
           this.success();
           this.router.navigate(['/adverts']);
@@ -162,7 +166,7 @@ export class CreateEditAdvertComponent implements OnInit {
       return;
     }
     this.progressBarService.startLoading();
-    this.advertsService.addAdvert(this.advertForm.value).subscribe(
+    this.sub = this.advertsService.addAdvert(this.advertForm.value).subscribe(
       () => {
         this.success();
         this.router.navigate(['/adverts']);
@@ -205,5 +209,9 @@ export class CreateEditAdvertComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 }

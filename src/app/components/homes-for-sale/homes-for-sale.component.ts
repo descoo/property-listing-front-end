@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
@@ -11,7 +12,7 @@ import { ProgressbarService } from 'src/app/services/progressbar.service';
   templateUrl: './homes-for-sale.component.html',
   styleUrls: ['./homes-for-sale.component.css'],
 })
-export class HomesForSaleComponent implements OnInit {
+export class HomesForSaleComponent implements OnInit, OnDestroy {
   adverts!: Ad[];
   sortedAds!: Ad[];
   sortForm!: FormGroup;
@@ -19,6 +20,7 @@ export class HomesForSaleComponent implements OnInit {
   priceSearch!: { min: string; max: string };
   featured!: Ad[];
   tempAds!: Ad[];
+  sub!: Subscription | undefined;
 
   constructor(
     private router: Router,
@@ -76,7 +78,7 @@ export class HomesForSaleComponent implements OnInit {
   }
 
   sortWatcher(): void {
-    this.sortForm.get('sort')?.valueChanges.subscribe((val) => {
+    this.sub = this.sortForm.get('sort')?.valueChanges.subscribe((val) => {
       if (val === 'descending') {
         this.sortDescending();
       } else {
@@ -87,7 +89,7 @@ export class HomesForSaleComponent implements OnInit {
 
   getAdverts(): void {
     this.progressBarService.startLoading();
-    this.advertsService.getAllAdverts().subscribe((ads) => {
+    (this.sub = this.advertsService.getAllAdverts().subscribe((ads) => {
       this.adverts = ads;
       this.sortedAds = ads;
       if (this.searchBy) {
@@ -97,7 +99,7 @@ export class HomesForSaleComponent implements OnInit {
         this.onMinMaxFilter(this.priceSearch);
       }
       this.success();
-    }),
+    })),
       () => {
         this.error();
       };
@@ -125,5 +127,9 @@ export class HomesForSaleComponent implements OnInit {
     this.progressBarService.completeLoading();
     displayMessage('error', 'Oops something went wrong!');
     this.router.navigate(['/home']);
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 }

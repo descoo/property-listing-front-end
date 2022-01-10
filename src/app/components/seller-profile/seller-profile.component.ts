@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { loginMessages } from 'src/app/helpers/validationmsgs';
 import { Seller } from 'src/app/models/user.model';
@@ -14,12 +15,13 @@ import Swal from 'sweetalert2';
   templateUrl: './seller-profile.component.html',
   styleUrls: ['./seller-profile.component.css'],
 })
-export class SellerProfileComponent implements OnInit {
+export class SellerProfileComponent implements OnInit, OnDestroy {
   profileForm!: FormGroup;
   errorMessage!: string;
   validationMessages: any = loginMessages;
   sellerId!: number | undefined;
   seller!: Seller | undefined;
+  sub!: Subscription;
 
   formErrors: any = {
     email: '',
@@ -38,14 +40,16 @@ export class SellerProfileComponent implements OnInit {
     this.getSellerData();
     this.createForm();
 
-    this.profileForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-      this.logValidationErrors(this.profileForm);
-    });
+    this.sub = this.profileForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.profileForm);
+      });
   }
 
   getSellerData(): void {
     this.progressBarService.startLoading();
-    this.auth.getCurrentUser().subscribe((user) => {
+    this.sub = this.auth.getCurrentUser().subscribe((user) => {
       if (user.name) {
         this.sellerService.getSellers().subscribe((sellers) => {
           const seller = sellers.find((seller) => seller.seller === user.name);
@@ -81,7 +85,7 @@ export class SellerProfileComponent implements OnInit {
     if (this.sellerId) {
       this.progressBarService.startLoading();
       const seller: Seller = { ...this.seller, ...this.profileForm.value };
-      this.sellerService.updateSeller(seller).subscribe(() => {
+      this.sub = this.sellerService.updateSeller(seller).subscribe(() => {
         this.success();
         Swal.fire({
           position: 'top',
@@ -131,5 +135,9 @@ export class SellerProfileComponent implements OnInit {
       timer: 1500,
     });
     this.router.navigate(['/adverts']);
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

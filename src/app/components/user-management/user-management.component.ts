@@ -1,16 +1,23 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css'],
 })
-export class UserManagementComponent implements OnInit {
+export class UserManagementComponent implements OnInit, OnDestroy {
   faLock = faLock;
   faLockOpen = faLockOpen;
 
@@ -24,6 +31,7 @@ export class UserManagementComponent implements OnInit {
   showActions = true;
   email!: string;
   user!: User;
+  sub!: Subscription;
 
   _filterBy!: string;
 
@@ -47,7 +55,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   getCurrentUserEmail(): void {
-    this.auth.getCurrentUser().subscribe((user) => {
+    this.sub = this.auth.getCurrentUser().subscribe((user) => {
       this.user = user;
     });
   }
@@ -58,7 +66,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   unlockAccount(user: User): void {
-    this.auth.unlockAccount(user).subscribe(
+    this.sub = this.auth.unlockAccount(user).subscribe(
       () => {},
       () => this.error()
     );
@@ -73,7 +81,7 @@ export class UserManagementComponent implements OnInit {
       if (this.email.includes('@')) {
         this.progressBarService.startLoading();
         user.email = this.email;
-        this.auth.editUser(user).subscribe(() => {
+        this.sub = this.auth.editUser(user).subscribe(() => {
           displayMessage('success', 'Email updated successfully');
           this.success();
         });
@@ -89,7 +97,7 @@ export class UserManagementComponent implements OnInit {
 
   getUsers(): void {
     this.progressBarService.startLoading();
-    this.auth.getUsers().subscribe((users) => {
+    this.sub = this.auth.getUsers().subscribe((users) => {
       this.filteredUsers = users;
       this.users = users;
       this.success();
@@ -117,5 +125,9 @@ export class UserManagementComponent implements OnInit {
     this.progressBarService.setError();
     this.progressBarService.completeLoading();
     displayMessage('error', 'Oops something went wrong! Try again later');
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }

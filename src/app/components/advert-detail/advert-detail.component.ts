@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
 import { FavouritesService } from 'src/app/services/favourites.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
-import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Component({
   selector: 'app-advert-detail',
   templateUrl: './advert-detail.component.html',
   styleUrls: ['./advert-detail.component.css'],
 })
-export class AdvertDetailComponent implements OnInit {
+export class AdvertDetailComponent implements OnInit, OnDestroy {
   id!: number;
   ad: Ad | undefined;
+  sub!: Subscription;
 
   constructor(
     private advertsService: AdvertsService,
@@ -31,7 +32,7 @@ export class AdvertDetailComponent implements OnInit {
   getAdvert(): void {
     this.getPassedId();
     this.progressBarService.startLoading();
-    this.advertsService.getSingleAdvert(this.id).subscribe(
+    this.sub = this.advertsService.getSingleAdvert(this.id).subscribe(
       (ad) => {
         this.success();
         this.ad = ad;
@@ -54,7 +55,7 @@ export class AdvertDetailComponent implements OnInit {
 
   addAdToFavorites(ad: Ad): void {
     this.progressBarService.startLoading();
-    this.favouritesService.addAdToFavorites(ad).subscribe((ad) => {
+    this.sub = this.favouritesService.addAdToFavorites(ad).subscribe((ad) => {
       if (Object.keys(ad).length > 0) {
         this.success();
         displayMessage('success', 'Advert added successfully!');
@@ -77,5 +78,9 @@ export class AdvertDetailComponent implements OnInit {
   error(): void {
     this.progressBarService.setError();
     this.progressBarService.completeLoading();
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }
