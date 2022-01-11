@@ -89,7 +89,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   success(): void {
     this.progressBarService.setSuccess();
     this.progressBarService.completeLoading();
-    displayMessage('success', 'Logged in successfully!');
     this.router.navigate(['/home']);
   }
 
