@@ -13,7 +13,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { SearchComponent } from './components/search/search.component';
 import { SellerProfileComponent } from './components/seller-profile/seller-profile.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
-import { AuthGuard } from './gaurds/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { MyAdvertsGuard } from './guards/my-adverts.guard';
 
 const routes: Routes = [
