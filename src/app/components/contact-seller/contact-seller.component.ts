@@ -68,6 +68,10 @@ export class ContactSellerComponent implements OnInit, OnDestroy {
   }
 
   sendMessage(): void {
+    if (this.contactForm.invalid) {
+      displayMessage('error', 'Fill all required fields', 2000);
+      return;
+    }
     this.contactForm.reset();
     displayMessage('success', 'message sent successfully!');
   }

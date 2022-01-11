@@ -93,6 +93,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   // submit to backend
   registerUser(): void {
+    if (this.registerForm.invalid) {
+      displayMessage('error', 'Fill all required fields', 2000);
+      return;
+    }
+
     this.progressBarService.startLoading();
     const {
       name,
@@ -114,7 +119,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.sub = this.auth.registerUser(userToRegister).subscribe(
       (user) => {
         this.success();
-        this.auth.changeCurrentUser(user);
+        const tempUser = { ...user, password: '' };
+        this.auth.changeCurrentUser(tempUser);
       },
       () => {
         this.error();

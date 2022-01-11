@@ -63,6 +63,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // submit to backend
   logInUser(): void {
+    if (this.loginForm.invalid) {
+      displayMessage('error', 'Fill all required fields', 2000);
+      return;
+    }
+
     this.progressBarService.startLoading();
     this.sub = this.auth.getUsers().subscribe((users) => {
       const user = users.find(
@@ -71,7 +76,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.loginForm.value.password === u.password
       );
       if (user) {
-        this.auth.changeCurrentUser(user);
+        const tempUser = { ...user, password: '' };
+        this.auth.changeCurrentUser(tempUser);
         this.success();
         this.loginForm.reset();
       } else {

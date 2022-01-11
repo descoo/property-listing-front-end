@@ -1,5 +1,5 @@
 <div class="container pt-5">
-  <div class="justify-center pt-2 mt-20 row">
+  <div class="justify-center pt-2 mt-15 row">
     <div class="pb-3 rounded-md shadow col-sm-4">
       <h1 class="pt-3 font-semibold text-center text-secondary">LOGIN</h1>
       <form
@@ -20,9 +20,9 @@
             placeholder="*Email"
             formControlName="email"
           />
-          <span class="invalid-feedback">
-            {{ formErrors.email }}
-          </span>
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Valid email is required. It must be 3 to 100 characters long
+          </small>
         </div>
 
         <div class="mb-4 form-group">
@@ -37,16 +37,12 @@
             placeholder="*Password"
             formControlName="password"
           />
-          <span class="invalid-feedback"> {{ formErrors.password }} </span>
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Password is required. It must be 1 to 100 characters long
+          </small>
         </div>
 
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid"
-          class="mt-4 btn btn-primary"
-        >
-          submit
-        </button>
+        <button type="submit" class="mt-4 btn btn-primary">submit</button>
         <p
           routerLink="/register"
           class="flex-grow mt-1 text-sm text-blue-500 cursor-pointer"

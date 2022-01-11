@@ -19,11 +19,12 @@
             }"
             id="name"
             type="text"
-            placeholder="*required"
             formControlName="name"
             (blur)="logValidationErrors()"
           />
-          <small class="invalid-feedback"> {{ formErrors.name }} </small>
+          <small class="tracking-tighter text-gray-400 text-xm"
+            >Full name is required. It must be 1 to 100 characters long</small
+          >
         </div>
 
         <div class="form-group">
@@ -37,12 +38,11 @@
             }"
             id="surname"
             type="text"
-            placeholder="*required"
             formControlName="surname"
             (blur)="logValidationErrors()"
           />
-          <small class="invalid-feedback">
-            {{ formErrors.surname }}
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Full name is required. It must be 1 to 100 characters long
           </small>
         </div>
 
@@ -55,11 +55,12 @@
             }"
             id="email"
             type="email"
-            placeholder="*required"
             formControlName="email"
             (blur)="logValidationErrors()"
           />
-          <small class="invalid-feedback">{{ formErrors.email }} </small>
+          <small class="tracking-tighter text-gray-400 text-xm"
+            >Valid email is required. It must be 3 to 100 characters long
+          </small>
         </div>
 
         <div formGroupName="passwordGroup">
@@ -74,12 +75,11 @@
               }"
               id="password"
               type="password"
-              placeholder="*required"
               formControlName="password"
               (blur)="logValidationErrors()"
             />
-            <small class="invalid-feedback">
-              {{ formErrors.password }}
+            <small class="tracking-tighter text-gray-400 text-xm">
+              Password is required. It must be 1 to 100 characters long
             </small>
           </div>
 
@@ -96,39 +96,16 @@
               }"
               id="confirm"
               type="password"
-              placeholder="*required"
               formControlName="confirm"
               (blur)="logValidationErrors()"
             />
-            <small class="invalid-feedback">
-              {{ formErrors.confirm }}
-            </small>
-            <small
-              *ngIf="registerForm.get('passwordGroup')?.errors"
-              class="invalid-feedback"
-            >
+            <small class="tracking-tighter text-gray-400 text-xm">
               Passwords must match exactly
             </small>
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="text-gray-600 col-form-label">Lock Account</label>
-          <input
-            type="radio"
-            formControlName="isLocked"
-            value="unlock"
-          />Unlocked
-          <input type="radio" formControlName="isLocked" value="lock" />Locked
-        </div>
-
-        <button
-          type="submit"
-          [disabled]="registerForm.invalid"
-          class="mt-4 btn btn-primary"
-        >
-          Register
-        </button>
+        <button type="submit" class="mt-4 btn btn-primary">Register</button>
         <p
           routerLink="/login"
           class="flex-grow mt-1 text-sm text-blue-500 cursor-pointer"

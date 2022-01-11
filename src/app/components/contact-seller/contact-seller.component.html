@@ -38,9 +38,9 @@
         formControlName="name"
         (blur)="logValidationErrors()"
       />
-      <span class="invalid-feedback">
-        {{ formErrors.name }}
-      </span>
+      <small class="tracking-tighter text-gray-400 text-xm">
+        Your name is required. It must be 5 to 100 characters long
+      </small>
     </div>
 
     <div class="form-group">
@@ -57,9 +57,9 @@
         placeholder="*required"
         formControlName="email"
       />
-      <span class="invalid-feedback">
-        {{ formErrors.email }}
-      </span>
+      <small class="tracking-tighter text-gray-400 text-xm">
+        Valid email is required. It must be 3 to 100 characters long
+      </small>
     </div>
 
     <div class="form-group">
@@ -77,9 +77,9 @@
         formControlName="number"
         (blur)="logValidationErrors()"
       />
-      <span class="invalid-feedback">
-        {{ formErrors.number }}
-      </span>
+      <small class="tracking-tighter text-gray-400 text-xm">
+        Your phone number is optional
+      </small>
     </div>
 
     <div class="form-group">
@@ -98,19 +98,13 @@
         (blur)="logValidationErrors()"
       >
       </textarea>
-      <span class="invalid-feedback">
-        {{ formErrors.message }}
-      </span>
+      <small class="tracking-tighter text-gray-400 text-xm">
+        Message is required. It must be 10 to 2000 characters long
+      </small>
     </div>
 
     <div class="mt-4">
-      <button
-        type="submit"
-        [disabled]="contactForm.invalid"
-        class="btn btn-primary"
-      >
-        Send Message
-      </button>
+      <button type="submit" class="btn btn-primary">Send Message</button>
     </div>
   </form>
 </div>

@@ -152,6 +152,11 @@ export class CreateEditAdvertComponent implements OnInit, OnDestroy {
 
   // submit to backend
   submitAdvert(): void {
+    if (this.advertForm.invalid) {
+      displayMessage('error', 'Fill all required fields', 2000);
+      return;
+    }
+
     if (this.advertId) {
       // create object from form
       const editedAd = { ...this.advert, ...this.advertForm.value };

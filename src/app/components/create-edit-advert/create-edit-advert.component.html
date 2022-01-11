@@ -25,9 +25,9 @@
             formControlName="name"
             (blur)="logValidationErrors()"
           />
-          <span class="invalid-feedback">
-            {{ formErrors.name }}
-          </span>
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Advert title is required. It must be 1 to 100 characters long
+          </small>
         </div>
 
         <div class="form-group">
@@ -51,7 +51,9 @@
               {{ province }}
             </option>
           </select>
-          <span class="invalid-feedback"> {{ formErrors.province }} </span>
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Province required to select a city
+          </small>
         </div>
 
         <div class="form-group">
@@ -72,9 +74,8 @@
               {{ city }}
             </option>
           </select>
-          <span class="invalid-feedback"> {{ formErrors.city }} </span>
-          <span *ngIf="!advertId" class="text-sm text-gray-600">
-            Select a province first before selecting a city</span
+          <small class="tracking-tighter text-gray-400 text-xm">
+            City is required. Province is required first to select a city</small
           >
         </div>
 
@@ -96,9 +97,9 @@
             (blur)="logValidationErrors()"
           >
           </textarea>
-          <span class="invalid-feedback">
-            {{ formErrors.advertDetails }}
-          </span>
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Advert details required. Mmust be 10 to 100 characters long
+          </small>
         </div>
 
         <div class="form-group">
@@ -116,22 +117,16 @@
             formControlName="price"
             (blur)="logValidationErrors()"
           />
-          <span class="invalid-feedback">
-            {{ formErrors.price }}
-          </span>
+          <small class="tracking-tighter text-gray-400 text-xm">
+            Price is required. It must be 10 000 to 100 million rands
+          </small>
         </div>
 
-        <div class="mt-4 flex justify-between">
+        <div class="flex justify-between mt-4">
           <button (click)="cancelUpdate()" class="btn btn-danger">
             Cancel
           </button>
-          <button
-            type="submit"
-            [disabled]="advertForm.invalid"
-            class="btn btn-primary"
-          >
-            Publish Advert
-          </button>
+          <button type="submit" class="btn btn-primary">Publish Advert</button>
         </div>
       </form>
     </div>
