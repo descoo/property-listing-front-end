@@ -33,12 +33,6 @@ export class ContactSellerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getSellerInfo();
     this.createForm();
-
-    this.sub = this.contactForm.valueChanges
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.logValidationErrors(this.contactForm);
-      });
   }
 
   createForm(): void {
@@ -65,6 +59,12 @@ export class ContactSellerComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+
+    this.sub = this.contactForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.contactForm);
+      });
   }
 
   sendMessage(): void {

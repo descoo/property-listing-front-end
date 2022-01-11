@@ -36,12 +36,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createForm();
-
-    this.sub = this.loginForm.valueChanges
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.logValidationErrors(this.loginForm);
-      });
   }
 
   createForm(): void {
@@ -59,6 +53,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+
+    this.sub = this.loginForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.loginForm);
+      });
   }
 
   // submit to backend

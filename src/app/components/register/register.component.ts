@@ -42,12 +42,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createForm();
-
-    this.sub = this.registerForm.valueChanges
-      .pipe(debounceTime(1000))
-      .subscribe(() => {
-        this.logValidationErrors(this.registerForm);
-      });
   }
 
   // create form
@@ -89,6 +83,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
       ),
       isLocked: ['unlock'],
     });
+
+    this.sub = this.registerForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => {
+        this.logValidationErrors(this.registerForm);
+      });
   }
 
   // submit to backend

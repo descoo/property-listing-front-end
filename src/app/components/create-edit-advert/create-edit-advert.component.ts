@@ -47,9 +47,6 @@ export class CreateEditAdvertComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeWatcher();
     this.createForm();
-    this.disableUneditableFields();
-    this.formWatcher();
-    this.provinceSelectionWatcher();
   }
 
   // get object
@@ -111,6 +108,10 @@ export class CreateEditAdvertComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(10000), Validators.max(100000000)],
       ],
     });
+
+    this.disableUneditableFields();
+    this.formWatcher();
+    this.provinceSelectionWatcher();
   }
 
   disableUneditableFields(): void {
