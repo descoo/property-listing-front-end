@@ -21,12 +21,11 @@
             }"
             id="name"
             type="text"
-            placeholder="*required"
             formControlName="name"
             (blur)="logValidationErrors()"
           />
           <small class="tracking-tighter text-gray-400 text-xm">
-            Advert title is required. It must be 1 to 100 characters long
+            Required. It must be 10 to 100 characters long
           </small>
         </div>
 
@@ -75,7 +74,7 @@
             </option>
           </select>
           <small class="tracking-tighter text-gray-400 text-xm">
-            City is required. Province is required first to select a city</small
+            Required. Province is required first to select a city</small
           >
         </div>
 
@@ -92,13 +91,12 @@
             }"
             id="advertDetails"
             rows="3"
-            placeholder="*required"
             formControlName="advertDetails"
             (blur)="logValidationErrors()"
           >
           </textarea>
           <small class="tracking-tighter text-gray-400 text-xm">
-            Advert details required. Mmust be 10 to 100 characters long
+            Required. Mmust be 10 to 100 characters long
           </small>
         </div>
 
@@ -113,17 +111,16 @@
             }"
             id="price"
             type="number"
-            placeholder="*required"
             formControlName="price"
             (blur)="logValidationErrors()"
           />
           <small class="tracking-tighter text-gray-400 text-xm">
-            Price is required. It must be 10 000 to 100 million rands
+            Required. It must be 10 000 to 100 million rands
           </small>
         </div>
 
         <div class="flex justify-between mt-4">
-          <button (click)="cancelUpdate()" class="btn btn-danger">
+          <button (click)="cancelUpdate()" class="btn btn-secondary">
             Cancel
           </button>
           <button type="submit" class="btn btn-primary">Publish Advert</button>

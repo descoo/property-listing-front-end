@@ -2,7 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { contactMessages } from 'src/app/helpers/validationmsgs';
 import { Ad, User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -69,7 +72,7 @@ export class ContactSellerComponent implements OnInit, OnDestroy {
 
   sendMessage(): void {
     if (this.contactForm.invalid) {
-      displayMessage('error', 'Fill all required fields', 2000);
+      displayCustomMessage('Please complete the required fields', 2000);
       return;
     }
     this.contactForm.reset();

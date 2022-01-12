@@ -1,18 +1,18 @@
 <div
-  class="
-    lg:mt-10
-    md:mt-10
-    grid grid-cols-2
-    gap-4
-    md:grid-cols-1 md:w-4/6
-    lg:grid-cols-2 lg:w-4/5
-    md:m-auto
-    lg:m-auto
-  "
+  class="lg:mt-10 md:mt-10 grid grid-cols-2 gap-4 md:grid-cols-1 md:w-4/6 lg:grid-cols-2 lg:w-4/5 md:m-auto lg:m-auto"
 >
+  <div class="flex justify-center">
+    <h2
+      *ngIf="adverts?.length == 0"
+      class="font-semibold text-lg text-gray-700"
+    >
+      You have no adverts at the moment
+    </h2>
+  </div>
+
   <article
     class="flex justify-between overflow-hidden rounded shadow-md"
-    *ngFor="let ad of filteredAds"
+    *ngFor="let ad of adverts"
   >
     <div class="w-2/5">
       <img class="object-cover" src="{{ ad.imgUrl }}" />
@@ -27,15 +27,7 @@
       </h3>
       <div class="mt-1 mb-4">
         <span
-          class="
-            px-1
-            py-0.5
-            mr-2
-            text-sm
-            tracking-tighter
-            bg-gray-100
-            rounded-2xl
-          "
+          class="px-1 py-0.5 mr-2 text-sm tracking-tighter bg-gray-100 rounded-2xl"
         >
           {{ ad.province }}
         </span>
@@ -52,17 +44,7 @@
 
     <button
       (click)="deleteAdvert(ad.id)"
-      class="
-        text-white
-        bg-gradient-to-r
-        from-red-400
-        to-red-500
-        rounded
-        px-1
-        mt-2
-        h-1/6
-        mr-2
-      "
+      class="text-white bg-gradient-to-r from-red-400 to-red-500 rounded px-1 mt-2 h-1/6 mr-2"
     >
       remove
     </button>

@@ -1,4 +1,7 @@
-<ng-progress id="progressBar"></ng-progress>
+<ng-progress
+  id="progressBar"
+  [color]="progressBarService.currentColor"
+></ng-progress>
 <header class="main-header">
   <div class="items-center">
     <h2 routerLink="/home" class="p-4 font-medium text-center cursor-pointer">

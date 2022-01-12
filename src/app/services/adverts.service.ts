@@ -79,7 +79,7 @@ export class AdvertsService {
     advert.imgUrl = '/assets/images/house.jpg';
     return this.http
       .post<Ad>(this.advertUrl, advert, { headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(catchError(this.handleError));
   }
 
   updateAdvert(ad: Ad): Observable<Ad> {
@@ -93,7 +93,6 @@ export class AdvertsService {
     const url = `${this.advertUrl}/${ad.id}`;
     return this.http.put<Ad>(url, ad, { headers }).pipe(
       map(() => ad),
-      delay(2000),
       catchError(this.handleError)
     );
   }

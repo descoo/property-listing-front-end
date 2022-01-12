@@ -4,47 +4,26 @@
 <div class="">
   <swiper [config]="options">
     <ng-template swiperSlide *ngFor="let ad of adverts">
-      <article
-        (click)="goToAdvertDetails(ad.id)"
-        class="
-          flex
-          w-5/6
-          overflow-hidden
-          rounded
-          shadow-md
-          cursor-pointer
-          hover:bg-gray-50
-        "
-      >
+      <article class="flex w-5/6 overflow-hidden rounded shadow-md">
         <div class="flex-shrink-0 w-2/4">
           <img class="object-cover" src="{{ ad.imgUrl }}" />
         </div>
 
         <div class="px-2 text-gray-800 ml-2">
-          <h3 class="text-xl font-bold">{{ ad.name }}</h3>
+          <h3
+            (click)="goToAdvertDetails(ad.id)"
+            class="text-xl font-bold cursor-pointer hover:text-gray-600"
+          >
+            {{ ad.name }}
+          </h3>
           <div class="mt-2 mb-3">
             <span
-              class="
-                px-1
-                py-0.5
-                mr-2
-                text-sm
-                tracking-tighter
-                bg-gray-100
-                rounded-2xl
-              "
+              class="px-1 py-0.5 mr-2 text-sm tracking-tighter bg-gray-100 rounded-2xl"
             >
               {{ ad.province }}
             </span>
             <span
-              class="
-                px-1
-                py-0.5
-                text-sm
-                tracking-tighter
-                bg-gray-100
-                rounded-2xl
-              "
+              class="px-1 py-0.5 text-sm tracking-tighter bg-gray-100 rounded-2xl"
             >
               {{ ad.city }}
             </span>

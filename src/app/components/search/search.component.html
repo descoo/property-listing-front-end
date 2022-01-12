@@ -1,17 +1,7 @@
 <form [formGroup]="searchForm" (ngSubmit)="onFilter()">
   <input
     formControlName="search"
-    class="
-      w-100
-      bg-gray-100
-      rounded-full
-      py-2
-      pl-5
-      border-none
-      outline-none
-      align-center
-      shadow-sm
-    "
+    class="w-100 bg-gray-100 rounded-full py-2 pl-5 border-none outline-none align-center shadow-sm"
     type="text"
     placeholder="Search..."
   />
@@ -76,29 +66,13 @@
       <button
         type="button"
         (click)="onReset('reseting')"
-        class="
-          px-2
-          py-2
-          text-white
-          rounded
-          bg-gradient-to-r
-          from-red-400
-          to-red-500
-        "
+        class="px-2 py-2 text-white rounded bg-gradient-to-r from-red-400 to-red-500"
       >
         Reset Search
       </button>
       <button
         type="submit"
-        class="
-          px-2
-          py-2
-          text-white
-          rounded
-          bg-gradient-to-r
-          from-blue-500
-          to-blue-600
-        "
+        class="px-2 py-2 text-white rounded bg-gradient-to-r from-blue-500 to-blue-600"
       >
         Search
       </button>

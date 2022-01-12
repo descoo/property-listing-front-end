@@ -9,7 +9,10 @@ import { cities, provinces } from 'src/app/helpers/locations-data';
 import { debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AdvertsService } from 'src/app/services/adverts.service';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 
 @Component({
   selector: 'app-create-edit-advert',
@@ -154,7 +157,7 @@ export class CreateEditAdvertComponent implements OnInit, OnDestroy {
   // submit to backend
   submitAdvert(): void {
     if (this.advertForm.invalid) {
-      displayMessage('error', 'Fill all required fields', 2000);
+      displayCustomMessage('Please complete the required fields', 2000);
       return;
     }
 

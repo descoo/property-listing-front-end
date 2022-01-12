@@ -11,8 +11,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
 
 import { registerMessages } from 'src/app/helpers/validationmsgs';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { Subscription } from 'rxjs';
+import { Seller } from 'src/app/models/user.model';
+import { SellerService } from 'src/app/services/seller.service';
 
 @Component({
   selector: 'app-register',
@@ -36,6 +41,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
+    private sellerService: SellerService,
     public progressBarService: ProgressbarService,
     private router: Router
   ) {}
@@ -94,7 +100,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   // submit to backend
   registerUser(): void {
     if (this.registerForm.invalid) {
-      displayMessage('error', 'Fill all required fields', 2000);
+      displayCustomMessage('Please complete the required fields', 2000);
       return;
     }
 
@@ -115,6 +121,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
       password,
       isLocked,
     };
+
+    const seller: Seller = {
+      id: null,
+      seller: name,
+      email,
+    };
+
+    this.sub = this.sellerService.addSeller(seller).subscribe();
 
     this.sub = this.auth.registerUser(userToRegister).subscribe(
       (user) => {

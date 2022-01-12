@@ -19,7 +19,7 @@ export class SellerProfileComponent implements OnInit, OnDestroy {
   profileForm!: FormGroup;
   errorMessage!: string;
   validationMessages: any = loginMessages;
-  sellerId!: number | undefined;
+  sellerId!: number | undefined | null;
   seller!: Seller | undefined;
   sub!: Subscription;
 
@@ -49,7 +49,7 @@ export class SellerProfileComponent implements OnInit, OnDestroy {
 
   getSellerData(): void {
     this.progressBarService.startLoading();
-    this.sub = this.auth.getCurrentUser().subscribe((user) => {
+    this.sub = this.auth.currentUser$.subscribe((user) => {
       if (user.name) {
         this.sellerService.getSellers().subscribe((sellers) => {
           const seller = sellers.find((seller) => seller.seller === user.name);

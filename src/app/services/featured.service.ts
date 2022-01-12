@@ -27,11 +27,36 @@ export class FeaturedService {
   }
 
   adToFeatured(ad: Ad): Observable<Ad> {
-    ad.id = null;
-    ad.featuredStatus = true;
+    const {
+      likedBy,
+      author,
+      imgUrl,
+      hiddenStatus,
+      deleteStatus,
+      name,
+      province,
+      city,
+      advertDetails,
+      price,
+    } = ad;
+
+    const newAd = {
+      id: null,
+      featuredStatus: true,
+      likedBy,
+      author,
+      imgUrl,
+      hiddenStatus,
+      deleteStatus,
+      name,
+      province,
+      city,
+      advertDetails,
+      price,
+    };
     return this.http
-      .post<Ad>(this.featuredUrl, ad, { headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .post<Ad>(this.featuredUrl, newAd, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   removeFromFeatured(ad: Ad): Observable<{}> {

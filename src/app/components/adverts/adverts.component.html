@@ -2,18 +2,19 @@
   <div class="flex justify-end mb-4">
     <button
       routerLink="/add"
-      class="
-        px-2
-        py-1
-        text-white
-        rounded
-        bg-gradient-to-r
-        from-pink-500
-        to-purple-600
-      "
+      class="px-2 py-1 text-white rounded bg-gradient-to-r from-blue-500 to-blue-600"
     >
       Add New Advert
     </button>
+  </div>
+
+  <div class="flex justify-center">
+    <h2
+      *ngIf="(adverts$ | async)?.length == 0"
+      class="font-semibold text-lg text-gray-700"
+    >
+      You have no adverts at the moment
+    </h2>
   </div>
 
   <div class="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
@@ -29,15 +30,7 @@
         <h3 class="text-xl font-bold">{{ ad.name }}</h3>
         <div class="mt-1 mb-4">
           <span
-            class="
-              px-1
-              py-0.5
-              mr-2
-              text-sm
-              tracking-tighter
-              bg-gray-100
-              rounded-2xl
-            "
+            class="px-1 py-0.5 mr-2 text-sm tracking-tighter bg-gray-100 rounded-2xl"
           >
             {{ ad.province }}
           </span>
@@ -66,7 +59,7 @@
             class="flex flex-col w-20 mt-1 space-y-1 text-sm bg-transparent"
           >
             <button
-              [routerLink]="['/edit', ad.id]"
+              (click)="goToEdit()"
               class="px-1 text-gray-600 bg-blue-200 rounded"
             >
               edit
@@ -95,17 +88,7 @@
         </div>
         <button
           (click)="feature(ad)"
-          class="
-            w-20
-            px-1
-            mt-2
-            mr-1
-            text-white
-            bg-gradient-to-r
-            from-blue-400
-            to-purple-500
-            rounded
-          "
+          class="w-20 px-1 mt-2 mr-1 text-white bg-gradient-to-r from-blue-400 to-purple-500 rounded"
         >
           {{ ad.featuredStatus ? "unfeature" : "feature" }}
         </button>

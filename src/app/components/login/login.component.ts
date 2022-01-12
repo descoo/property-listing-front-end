@@ -7,7 +7,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
 
 import { loginMessages } from 'src/app/helpers/validationmsgs';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -64,7 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   // submit to backend
   logInUser(): void {
     if (this.loginForm.invalid) {
-      displayMessage('error', 'Fill all required fields', 2000);
+      displayCustomMessage('Please complete the required fields', 2000);
       return;
     }
 

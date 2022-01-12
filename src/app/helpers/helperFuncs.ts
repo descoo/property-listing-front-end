@@ -13,3 +13,18 @@ export function displayMessage(
     timer: timer,
   });
 }
+
+export function displayCustomMessage(
+  message: string,
+  timer: number = 1500
+): void {
+  Swal.fire({
+    position: 'top',
+    title: message,
+    width: 400,
+    padding: '2em',
+    showConfirmButton: false,
+    backdrop: 'rgba(0,0,0,0.1)',
+    timer: timer,
+  });
+}

@@ -2,7 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY, Observable, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
 import { FeaturedService } from 'src/app/services/featured.service';
@@ -43,6 +46,10 @@ export class AdvertsComponent implements OnInit, OnDestroy {
   }
 
   feature(ad: Ad): void {
+    if (ad.featuredStatus) {
+      displayCustomMessage('Advert already featured', 2000);
+      return;
+    }
     this.sub = this.featureService.adToFeatured(ad).subscribe(
       (ad) => {
         console.log(ad);
@@ -52,6 +59,11 @@ export class AdvertsComponent implements OnInit, OnDestroy {
         displayMessage('error', 'Oops something went wrong!');
       }
     );
+  }
+
+  goToEdit(): void {
+    console.log(this.selectedId);
+    this.router.navigate(['/edit', this.selectedId]);
   }
 
   togglehideAdvert(ad: Ad): void {
@@ -105,6 +117,6 @@ export class AdvertsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 }

@@ -33,8 +33,8 @@ export interface User {
 }
 
 export interface Seller {
-  id: number;
+  id: number | null;
   seller: string;
   email: string;
-  phone: string;
+  phone?: string;
 }
