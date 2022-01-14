@@ -21,25 +21,18 @@ import { SearchService } from 'src/app/services/search.service';
 })
 export class SearchComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;
-  province!: string;
   provincesToSelectFrom = provinces;
   citiesToSelectFrom!: string[];
-  searchBy!: string;
-  maxSearchBy!: string;
-  minSearchBy!: string;
   adPrices!: number[];
   maxPrice!: number;
   minPrice!: number;
   maxPriceRanges!: number[];
   minPriceRanges!: number[];
-  minmaxRanges = { min: '', max: '' };
+
   sub!: Subscription | undefined;
   searchCriteria!: Search;
 
   @Output() filter: EventEmitter<Search> = new EventEmitter<Search>();
-  @Output() minmaxfilter: EventEmitter<{ min: string; max: string }> =
-    new EventEmitter<{ min: string; max: string }>();
-
   @Output() reset: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -53,8 +46,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.getPrices();
     this.createForm();
     this.provinceSelectionWatcher();
-    this.maxPriceSelectionWatcher();
-    this.minPriceSelectionWatcher();
   }
 
   getPrices(): void {
@@ -104,6 +95,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.searchCriteria.minPrice = this.searchForm.get('min')?.value;
     this.searchCriteria.maxPrice = this.searchForm.get('max')?.value;
 
+    if (this.searchCriteria.maxPrice === '') {
+      this.searchCriteria.maxPrice = this.maxPrice.toString();
+    }
+
     if (this.router.url !== '/homes-for-sale') {
       this.router.navigate(['/homes-for-sale']);
     }
@@ -113,6 +108,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onReset(val: string): void {
+    this.searchForm.get('search')?.patchValue('');
     this.searchForm.get('province')?.patchValue('');
     this.searchForm.get('city')?.patchValue('');
     this.searchForm.get('min')?.patchValue('');
@@ -141,34 +137,14 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.citiesToSelectFrom = key.cities;
       }
     }
-    this.sub = this.searchForm.get('city')?.valueChanges.subscribe((city) => {
-      if (city) {
-        this.searchBy = city;
-      }
-    });
   }
 
   provinceSelectionWatcher(): void {
     this.sub = this.searchForm
       .get('province')
       ?.valueChanges.subscribe((province) => {
-        this.province = province;
-        this.searchBy = province;
         this.citiesBasedOnProvinceSelection(province);
       });
-  }
-
-  maxPriceSelectionWatcher(): void {
-    this.sub = this.searchForm.get('min')?.valueChanges.subscribe((price) => {
-      this.maxSearchBy = price;
-      this.minmaxRanges.min = price;
-    });
-  }
-  minPriceSelectionWatcher(): void {
-    this.sub = this.searchForm.get('max')?.valueChanges.subscribe((price) => {
-      this.minSearchBy = price;
-      this.minmaxRanges.max = price;
-    });
   }
 
   ngOnDestroy(): void {

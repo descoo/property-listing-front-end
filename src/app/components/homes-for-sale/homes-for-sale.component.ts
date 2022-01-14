@@ -2,7 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { Ad, Search } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
@@ -50,6 +53,11 @@ export class HomesForSaleComponent implements OnInit, OnDestroy {
 
   onFilter(filterBy: Search): void {
     this.sortedAds = this.adverts;
+
+    if (Number(filterBy.minPrice) > Number(filterBy.maxPrice)) {
+      displayCustomMessage('min price cannot exceed max price');
+      return;
+    }
 
     if (filterBy.searchBy) {
       this.sortedAds = this.adverts.filter(
