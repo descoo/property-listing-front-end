@@ -22,6 +22,7 @@
     <!-- - Homes for Sale (Homes for Sale List Page) -->
     <h4
       routerLink="/homes-for-sale"
+      [routerLinkActiveOptions]="{ exact: true }"
       class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
       [routerLinkActive]="['active']"
     >
@@ -31,6 +32,7 @@
     <!-- - Sell a house (Redirects to Register page, you have to be registered to list a property) -->
     <h4
       routerLink="/add"
+      [routerLinkActiveOptions]="{ exact: true }"
       class="p-4 text-sm font-medium text-center rounded-t-lg cursor-pointer"
       [routerLinkActive]="['active']"
     >

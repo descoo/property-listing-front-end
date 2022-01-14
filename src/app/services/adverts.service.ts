@@ -4,7 +4,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subscription, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, map, tap } from 'rxjs/operators';
 import { Ad, User } from '../models/user.model';
 
@@ -18,23 +18,6 @@ const headers = new HttpHeaders({
 export class AdvertsService {
   private currentUser!: User;
   private advertUrl = 'api/adverts';
-  private _searchBy!: string;
-
-  get searchBy(): string {
-    return this._searchBy;
-  }
-  set searchBy(value: string) {
-    this._searchBy = value;
-  }
-
-  private _priceSearch!: { min: string; max: string };
-
-  get priceSearch(): { min: string; max: string } {
-    return this._priceSearch;
-  }
-  set priceSearch(value: { min: string; max: string }) {
-    this._priceSearch = value;
-  }
 
   constructor(private http: HttpClient) {}
 
@@ -51,7 +34,7 @@ export class AdvertsService {
   getAllAdverts(): Observable<Ad[]> {
     return this.http
       .get<Ad[]>(this.advertUrl)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   getCurrentUserAdverts(): Observable<Ad[]> {
@@ -61,7 +44,7 @@ export class AdvertsService {
     });
     return this.http.get<Ad[]>(this.advertUrl).pipe(
       map((ad) => ad.filter((ad) => ad.author === author)),
-      delay(2000),
+      delay(1000),
       catchError(this.handleError)
     );
   }
@@ -69,7 +52,7 @@ export class AdvertsService {
   getSingleAdvert(id: number): Observable<Ad> {
     return this.http
       .get<Ad>(`${this.advertUrl}/${id}`)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   addAdvert(advert: Ad): Observable<Ad> {
@@ -85,7 +68,7 @@ export class AdvertsService {
   updateAdvert(ad: Ad): Observable<Ad> {
     return this.http
       .put<Ad>(`${this.advertUrl}/${ad.id}`, ad, { headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   toggleHide(ad: Ad): Observable<Ad> {

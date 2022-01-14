@@ -100,7 +100,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   // submit to backend
   registerUser(): void {
     if (this.registerForm.invalid) {
-      displayCustomMessage('Please complete the required fields', 2000);
+      displayCustomMessage('Please complete the required fields');
       return;
     }
 

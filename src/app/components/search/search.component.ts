@@ -10,7 +10,9 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { cities, provinces } from 'src/app/helpers/locations-data';
+import { Search } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
+import { SearchService } from 'src/app/services/search.service';
 
 @Component({
   selector: 'app-search',
@@ -32,8 +34,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   minPriceRanges!: number[];
   minmaxRanges = { min: '', max: '' };
   sub!: Subscription | undefined;
+  searchCriteria!: Search;
 
-  @Output() filter: EventEmitter<string> = new EventEmitter<string>();
+  @Output() filter: EventEmitter<Search> = new EventEmitter<Search>();
   @Output() minmaxfilter: EventEmitter<{ min: string; max: string }> =
     new EventEmitter<{ min: string; max: string }>();
 
@@ -42,7 +45,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private adService: AdvertsService
+    private adService: AdvertsService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -85,33 +89,27 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onFilter(): void {
-    if (this.searchForm.get('search')?.value !== '') {
-      this.searchBy = this.searchForm.get('search')?.value;
-    }
-
-    this.searchForm.get('search')?.patchValue('');
-
-    if (!this.searchBy && !this.minmaxRanges.min && !this.minmaxRanges.max)
+    if (
+      !this.searchForm.get('search')?.value &&
+      !this.searchForm.get('province')?.value &&
+      !this.searchForm.get('city')?.value &&
+      !this.searchForm.get('min')?.value &&
+      !this.searchForm.get('max')?.value
+    )
       return;
 
-    if (this.searchBy) {
-      if (this.router.url !== '/homes-for-sale') {
-        this.router.navigate(['/homes-for-sale']);
-      }
-      this.adService.searchBy = this.searchBy;
-      this.filter.emit(this.searchBy);
-    } else if (this.minmaxRanges) {
-      if (!this.minmaxRanges.min) {
-        this.minmaxRanges.min = this.minPrice.toString();
-      } else if (!this.minmaxRanges.max) {
-        this.minmaxRanges.max = this.maxPrice.toString();
-      }
-      if (this.router.url !== '/homes-for-sale') {
-        this.router.navigate(['/homes-for-sale']);
-      }
-      this.adService.priceSearch = this.minmaxRanges;
-      this.minmaxfilter.emit(this.minmaxRanges);
+    this.searchCriteria.searchBy = this.searchForm.get('search')?.value;
+    this.searchCriteria.province = this.searchForm.get('province')?.value;
+    this.searchCriteria.city = this.searchForm.get('city')?.value;
+    this.searchCriteria.minPrice = this.searchForm.get('min')?.value;
+    this.searchCriteria.maxPrice = this.searchForm.get('max')?.value;
+
+    if (this.router.url !== '/homes-for-sale') {
+      this.router.navigate(['/homes-for-sale']);
     }
+
+    this.searchService.setSearchCriteria(this.searchCriteria);
+    this.filter.emit(this.searchCriteria);
   }
 
   onReset(val: string): void {
@@ -125,12 +123,15 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   createForm(): void {
+    this.searchService.searchCriteria$.subscribe(
+      (criteria) => (this.searchCriteria = criteria)
+    );
     this.searchForm = this.fb.group({
-      search: [''],
-      province: [''],
-      city: [''],
-      min: [''],
-      max: [''],
+      search: [this.searchCriteria?.searchBy],
+      province: [this.searchCriteria?.province],
+      city: [this.searchCriteria?.city],
+      min: [this.searchCriteria?.minPrice],
+      max: [this.searchCriteria?.maxPrice],
     });
   }
 

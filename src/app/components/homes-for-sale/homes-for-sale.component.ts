@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { displayMessage } from 'src/app/helpers/helperFuncs';
-import { Ad } from 'src/app/models/user.model';
+import { Ad, Search } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
 import { ProgressbarService } from 'src/app/services/progressbar.service';
+import { SearchService } from 'src/app/services/search.service';
 
 @Component({
   selector: 'app-homes-for-sale',
@@ -16,20 +17,19 @@ export class HomesForSaleComponent implements OnInit, OnDestroy {
   adverts!: Ad[];
   sortedAds!: Ad[];
   sortForm!: FormGroup;
-  searchBy!: string;
-  priceSearch!: { min: string; max: string };
-  featured!: Ad[];
-  tempAds!: Ad[];
   sub!: Subscription | undefined;
+  searchCriteria!: Search;
 
   constructor(
     private router: Router,
     private advertsService: AdvertsService,
     public progressBarService: ProgressbarService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private searchService: SearchService
   ) {
-    this.searchBy = this.advertsService.searchBy;
-    this.priceSearch = this.advertsService.priceSearch;
+    this.searchService.searchCriteria$.subscribe(
+      (searchCriteria) => (this.searchCriteria = searchCriteria)
+    );
   }
 
   ngOnInit(): void {
@@ -40,30 +40,54 @@ export class HomesForSaleComponent implements OnInit, OnDestroy {
 
   onReset(val: string): void {
     this.sortedAds = this.adverts;
-    this.advertsService.searchBy = '';
+    this.searchCriteria.searchBy = '';
+    this.searchCriteria.province = '';
+    this.searchCriteria.city = '';
+    this.searchCriteria.minPrice = '';
+    this.searchCriteria.maxPrice = '';
+    this.searchService.setSearchCriteria(this.searchCriteria);
   }
 
-  onFilter(filterBy: string): void {
-    this.sortedAds = this.adverts.filter(
-      (ad) =>
-        ad.name.toLocaleLowerCase().includes(filterBy.toLocaleLowerCase()) ||
+  onFilter(filterBy: Search): void {
+    this.sortedAds = this.adverts;
+
+    if (filterBy.searchBy) {
+      this.sortedAds = this.adverts.filter(
+        (ad) =>
+          ad.name
+            .toLocaleLowerCase()
+            .includes(filterBy.searchBy.toLocaleLowerCase()) ||
+          ad.province
+            .toLocaleLowerCase()
+            .includes(filterBy.searchBy.toLocaleLowerCase()) ||
+          ad.city
+            .toLocaleLowerCase()
+            .includes(filterBy.searchBy.toLocaleLowerCase())
+      );
+    }
+    if (filterBy.province) {
+      this.sortedAds = this.sortedAds.filter((ad) =>
         ad.province
           .toLocaleLowerCase()
-          .includes(filterBy.toLocaleLowerCase()) ||
-        ad.city.toLocaleLowerCase().includes(filterBy.toLocaleLowerCase())
-    );
-
-    this.sortedAds = this.sortedAds
-      .sort((a: Ad, b: Ad) => b.price - a.price)
-      .sort(
-        (a: Ad, b: Ad) => Number(b.featuredStatus) - Number(a.featuredStatus)
+          .includes(filterBy.province.toLocaleLowerCase())
       );
-  }
+    }
+    if (filterBy.city) {
+      this.sortedAds = this.sortedAds.filter((ad) =>
+        ad.city.toLocaleLowerCase().includes(filterBy.city.toLocaleLowerCase())
+      );
+    }
+    if (filterBy.minPrice) {
+      this.sortedAds = this.sortedAds.filter(
+        (ad) => ad.price >= Number(filterBy.minPrice)
+      );
+    }
+    if (filterBy.maxPrice) {
+      this.sortedAds = this.sortedAds.filter(
+        (ad) => ad.price <= Number(filterBy.maxPrice)
+      );
+    }
 
-  onMinMaxFilter(range: { min: string; max: string }): void {
-    this.sortedAds = this.adverts.filter(
-      (ad) => ad.price > Number(range.min) && ad.price <= Number(range.max)
-    );
     this.sortedAds = this.sortedAds
       .sort((a: Ad, b: Ad) => b.price - a.price)
       .sort(
@@ -92,12 +116,17 @@ export class HomesForSaleComponent implements OnInit, OnDestroy {
     (this.sub = this.advertsService.getAllAdverts().subscribe((ads) => {
       this.adverts = ads;
       this.sortedAds = ads;
-      if (this.searchBy) {
-        this.onFilter(this.searchBy);
+
+      if (
+        this.searchCriteria.searchBy ||
+        this.searchCriteria.province ||
+        this.searchCriteria.city ||
+        this.searchCriteria.minPrice ||
+        this.searchCriteria.maxPrice
+      ) {
+        this.onFilter(this.searchCriteria);
       }
-      if (this.priceSearch) {
-        this.onMinMaxFilter(this.priceSearch);
-      }
+
       this.success();
     })),
       () => {

@@ -38,3 +38,11 @@ export interface Seller {
   email: string;
   phone?: string;
 }
+
+export interface Search {
+  searchBy: string;
+  province: string;
+  city: string;
+  minPrice: string;
+  maxPrice: string;
+}

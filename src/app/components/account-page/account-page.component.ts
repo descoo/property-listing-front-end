@@ -9,7 +9,10 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { registerMessages } from 'src/app/helpers/validationmsgs';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -137,6 +140,10 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   }
 
   editUser(): void {
+    if (this.accountForm.invalid) {
+      displayCustomMessage('Please complete the required fields');
+      return;
+    }
     this.progressBarService.startLoading();
     const {
       name,

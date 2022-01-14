@@ -42,6 +42,7 @@ export class FavouritesComponent implements OnInit, OnDestroy {
       .pipe(map((ad) => ad.filter((ad) => ad.likedBy === this.currentUserName)))
       .subscribe((ads) => {
         this.adverts = ads;
+        console.log(this.adverts);
         this.success();
       })),
       () => this.error();

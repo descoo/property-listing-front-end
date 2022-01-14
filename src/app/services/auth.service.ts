@@ -25,26 +25,26 @@ export class AuthService {
   registerUser(user: User): Observable<User> {
     return this.http
       .post<User>(this.url, user, { headers: headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   getCurrentUser(): Observable<User> {
     const currentUser: User = JSON.parse(
       localStorage.getItem('currentUser') || '{}'
     );
-    return of(currentUser).pipe(delay(2000));
+    return of(currentUser).pipe(delay(1000));
   }
 
   getUsers(): Observable<User[]> {
     return this.http
       .get<User[]>(this.url)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   getSingleUser(id: number | null): Observable<User> {
     return this.http
       .get<User>(`${this.url}/${id}`)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   editUser(user: User): Observable<User> {
@@ -52,7 +52,7 @@ export class AuthService {
       .put<User>(`${this.url}/${user.id}`, user, { headers: headers })
       .pipe(
         map(() => user),
-        delay(2000),
+        delay(1000),
         catchError(this.handleError)
       );
   }
@@ -63,7 +63,7 @@ export class AuthService {
       .put<User>(`${this.url}/${user.id}`, user, { headers: headers })
       .pipe(
         map(() => user),
-        delay(2000),
+        delay(1000),
         catchError(this.handleError)
       );
   }

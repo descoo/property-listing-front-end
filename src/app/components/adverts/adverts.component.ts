@@ -42,12 +42,12 @@ export class AdvertsComponent implements OnInit, OnDestroy {
         return EMPTY;
       })
     );
-    setTimeout(() => this.success(), 2000);
+    setTimeout(() => this.success());
   }
 
   feature(ad: Ad): void {
     if (ad.featuredStatus) {
-      displayCustomMessage('Advert already featured', 2000);
+      displayCustomMessage('Advert already featured');
       return;
     }
     this.sub = this.featureService.adToFeatured(ad).subscribe(

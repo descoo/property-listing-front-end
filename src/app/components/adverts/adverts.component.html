@@ -11,7 +11,7 @@
   <div class="flex justify-center">
     <h2
       *ngIf="(adverts$ | async)?.length == 0"
-      class="font-semibold text-lg text-gray-700"
+      class="text-lg font-semibold text-gray-700"
     >
       You have no adverts at the moment
     </h2>
@@ -88,9 +88,9 @@
         </div>
         <button
           (click)="feature(ad)"
-          class="w-20 px-1 mt-2 mr-1 text-white bg-gradient-to-r from-blue-400 to-purple-500 rounded"
+          class="w-20 px-1 mt-2 mr-1 text-white rounded bg-gradient-to-r from-blue-400 to-purple-500"
         >
-          {{ ad.featuredStatus ? "unfeature" : "feature" }}
+          {{ ad.featuredStatus ? "featured" : "feature" }}
         </button>
       </div>
     </article>

@@ -23,7 +23,7 @@ export class FeaturedService {
   getFeaturedAdverts(): Observable<Ad[]> {
     return this.http
       .get<Ad[]>(this.featuredUrl)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   adToFeatured(ad: Ad): Observable<Ad> {
@@ -62,7 +62,7 @@ export class FeaturedService {
   removeFromFeatured(ad: Ad): Observable<{}> {
     return this.http
       .delete<Ad>(`${this.featuredUrl}/${ad.id}`, { headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   private handleError(err: HttpErrorResponse) {

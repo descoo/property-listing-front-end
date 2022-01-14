@@ -1,7 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { displayMessage } from 'src/app/helpers/helperFuncs';
+import { map } from 'rxjs/operators';
+import {
+  displayCustomMessage,
+  displayMessage,
+} from 'src/app/helpers/helperFuncs';
 import { Ad } from 'src/app/models/user.model';
 import { AdvertsService } from 'src/app/services/adverts.service';
 import { FavouritesService } from 'src/app/services/favourites.service';
@@ -16,6 +20,7 @@ export class AdvertDetailComponent implements OnInit, OnDestroy {
   id!: number;
   ad: Ad | undefined;
   sub!: Subscription;
+  favouritesNames: string[] = [];
 
   constructor(
     private advertsService: AdvertsService,
@@ -26,6 +31,7 @@ export class AdvertDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.getFavouriteAdsNames;
     this.getAdvert();
   }
 
@@ -53,7 +59,18 @@ export class AdvertDetailComponent implements OnInit, OnDestroy {
     this.id = Number(id);
   }
 
+  getFavouriteAdsNames(): void {
+    this.favouritesService
+      .getFavouriteAds()
+      .pipe(map((ad) => ad.map((ad) => ad.name)))
+      .subscribe((favouritesNames) => (this.favouritesNames = favouritesNames));
+  }
+
   addAdToFavorites(ad: Ad): void {
+    if (this.favouritesNames.includes(ad.name)) {
+      displayCustomMessage('Advert already added to favorites');
+      return;
+    }
     this.progressBarService.startLoading();
     this.sub = this.favouritesService.addAdToFavorites(ad).subscribe((ad) => {
       if (Object.keys(ad).length > 0) {

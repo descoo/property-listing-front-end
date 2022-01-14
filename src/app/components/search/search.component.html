@@ -1,7 +1,7 @@
 <form [formGroup]="searchForm" (ngSubmit)="onFilter()">
   <input
     formControlName="search"
-    class="w-100 bg-gray-100 rounded-full py-2 pl-5 border-none outline-none align-center shadow-sm"
+    class="py-2 pl-5 bg-gray-100 border-none rounded-full shadow-sm outline-none w-100 align-center"
     type="text"
     placeholder="Search..."
   />
@@ -14,7 +14,7 @@
       <div class="form-group">
         <select
           formControlName="province"
-          class="lg:w-40 text-gray-600 rounded-md form-control h-9"
+          class="text-gray-600 rounded-md lg:w-40 form-control h-9"
         >
           <option value="">-- province --</option>
           <option
@@ -29,7 +29,7 @@
       <div class="form-group">
         <select
           formControlName="city"
-          class="lg:w-40 text-gray-600 rounded-md form-control h-9"
+          class="text-gray-600 rounded-md lg:w-40 form-control h-9"
         >
           <option value="">-- city --</option>
           <option *ngFor="let city of citiesToSelectFrom" [value]="city">
@@ -41,7 +41,7 @@
       <div class="form-group">
         <select
           formControlName="min"
-          class="lg:w-40 text-gray-600 text-sm rounded-md form-control h-9"
+          class="text-sm text-gray-600 rounded-md lg:w-40 form-control h-9"
         >
           <option value="">-- Price Above --</option>
           <option *ngFor="let price of maxPriceRanges" [value]="price">
@@ -53,7 +53,7 @@
       <div class="form-group">
         <select
           formControlName="max"
-          class="lg:w-40 text-gray-600 text-sm rounded-md form-control h-9"
+          class="text-sm text-gray-600 rounded-md lg:w-40 form-control h-9"
         >
           <option value="">-- Price below --</option>
           <option *ngFor="let price of minPriceRanges" [value]="price">
@@ -62,17 +62,17 @@
         </select>
       </div>
     </div>
-    <div class="mt-4 flex justify-around">
+    <div class="flex justify-around mt-4">
       <button
         type="button"
         (click)="onReset('reseting')"
-        class="px-2 py-2 text-white rounded bg-gradient-to-r from-red-400 to-red-500"
+        class="w-40 px-2 py-2 text-white rounded bg-gradient-to-r from-red-400 to-red-500"
       >
         Reset Search
       </button>
       <button
         type="submit"
-        class="px-2 py-2 text-white rounded bg-gradient-to-r from-blue-500 to-blue-600"
+        class="w-40 px-2 py-2 text-white rounded bg-gradient-to-r from-blue-500 to-blue-600"
       >
         Search
       </button>

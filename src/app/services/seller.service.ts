@@ -22,7 +22,7 @@ export class SellerService {
   getSellers(): Observable<Seller[]> {
     return this.http
       .get<Seller[]>(this.url)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   addSeller(seller: Seller): Observable<Seller> {
@@ -36,7 +36,7 @@ export class SellerService {
       .put<Seller>(`${this.url}/${seller.id}`, seller, { headers: headers })
       .pipe(
         map(() => seller),
-        delay(2000),
+        delay(1000),
         catchError(this.handleError)
       );
   }

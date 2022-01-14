@@ -33,19 +33,19 @@ export class FavouritesService {
 
     return this.http
       .post<Ad>(this.favouritesUrl, ad, { headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   getFavouriteAds(): Observable<Ad[]> {
     return this.http
       .get<Ad[]>(this.favouritesUrl)
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   removeFromFavourites(id: number | null): Observable<Ad> {
     return this.http
       .delete<Ad>(`${this.favouritesUrl}/${id}`, { headers })
-      .pipe(delay(2000), catchError(this.handleError));
+      .pipe(delay(1000), catchError(this.handleError));
   }
 
   private handleError(err: HttpErrorResponse) {
